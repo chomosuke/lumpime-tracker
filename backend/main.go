@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/chomosuke/film-list/api/account"
+	"github.com/chomosuke/film-list/api/search"
 	"github.com/chomosuke/film-list/api/userdata"
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
@@ -15,7 +16,7 @@ func main() {
 	// parse cmd args first
 	port := flag.Int("p", 80, "port for the server")
 	dbConnection := flag.String("c", "", "connection string for mongodb database")
-	auth.JWTKey = flag.String("s", "an insecure secret", "secret for authentication")
+	auth.Secret = flag.String("s", "an insecure secret", "secret for authentication")
 
 	flag.Parse()
 
@@ -29,6 +30,8 @@ func main() {
 
 	endpoints := r.Group("/api")
 	{
+		endpoints.POST("/crawl", search.Crawl)
+
 		endpoints.POST("/login", account.Login)
 		endpoints.POST("/register", account.Register)
 

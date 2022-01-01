@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var JWTKey *string
+var Secret *string
 
 const AuthHeader = "Authorization"
 
@@ -26,7 +26,7 @@ func Middleware(c *gin.Context) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(*JWTKey), nil
+		return []byte(*Secret), nil
 	})
 	if err == nil {
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -65,7 +65,7 @@ func GetToken(userID string) string {
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS512, claims{
 		ID:     userID,
 		Expiry: time.Now().Unix() + expiry,
-	}).SignedString([]byte(*JWTKey))
+	}).SignedString([]byte(*Secret))
 	if err != nil {
 		panic(err)
 	}

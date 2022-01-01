@@ -16,6 +16,7 @@ type Database struct {
 	DB        *mongo.Database
 	Users     *mongo.Collection
 	UserDatas *mongo.Collection
+	Films     *mongo.Collection
 }
 
 func InitDb(connectionString string) (Database, func()) {
@@ -39,6 +40,7 @@ func InitDb(connectionString string) (Database, func()) {
 	db.DB = client.Database(databaseName)
 	db.Users = db.DB.Collection("users")
 	db.UserDatas = db.DB.Collection("userDatas")
+	db.Films = db.DB.Collection("films")
 
 	return *db, func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
@@ -58,4 +60,11 @@ type UserData struct {
 	UserID *primitive.ObjectID `bson:"userId"`
 	Url    string              `bson:"url"`
 	Data   interface{}         `bson:"data"`
+}
+
+type Film struct {
+	ID   *primitive.ObjectID `bson:"_id,omitempty"`
+	Url  string              `bson:"url"`
+	Name string              `bson:"name"`
+	Tags []string            `bson:"tags"`
 }
