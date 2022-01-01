@@ -4,12 +4,13 @@ import (
 	"context"
 	"net/url"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var DB *Database
+var DBInst Database
 
 type Database struct {
 	DB        *mongo.Database
@@ -17,8 +18,8 @@ type Database struct {
 	UserDatas *mongo.Collection
 }
 
-func InitDb(connectionString *string) (*Database, func()) {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(*connectionString))
+func InitDb(connectionString string) (Database, func()) {
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(connectionString))
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +29,7 @@ func InitDb(connectionString *string) (*Database, func()) {
 	}
 
 	// parse the database name
-	url, err := url.Parse(*connectionString)
+	url, err := url.Parse(connectionString)
 	if err != nil {
 		panic(err)
 	}
@@ -39,9 +40,15 @@ func InitDb(connectionString *string) (*Database, func()) {
 	db.Users = db.DB.Collection("users")
 	db.UserDatas = db.DB.Collection("userDatas")
 
-	return db, func() {
+	return *db, func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}
+}
+
+type User struct {
+	ID       *primitive.ObjectID `json:"ID" bson:"_id,omitempty"`
+	Username string              `json:"username" bson:"username"`
+	Password string              `json:"password" bson:"password"`
 }

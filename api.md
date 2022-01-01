@@ -10,7 +10,7 @@ request: {
     username: String,
     password: String,
 }
-response: String // auth_token
+response: auth_token: String
 ```
 
 ## POST `/register`
@@ -19,16 +19,23 @@ request: {
     username: String,
     password: String,
 }
-response: String // auth_token
+response: auth_token: String
 ```
 
 ## PATCH `/account`
 ```
-request: {
+request: auth_token
+{
     username: String,
     password: String,
 }
 response: none
+```
+
+## GET `/username`
+```
+request: auth_token
+response: String
 ```
 
 # Search

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/chomosuke/film-list/api/account"
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
@@ -18,17 +19,25 @@ func main() {
 	flag.Parse()
 
 	// connect to database
-	database, cleanup := db.InitDb(dbConnection)
-	db.DB = database
+	database, cleanup := db.InitDb(*dbConnection)
+	db.DBInst = database
 	defer cleanup()
 
 	// configurate and start the server.
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Use()
+
+	endpoints := r.Group("/api")
+	{
+		endpoints.POST("/login", account.Login)
+		endpoints.POST("/register", account.Register)
+
+		authorized := endpoints.Group("/")
+		authorized.Use(auth.Middleware)
+		{
+			authorized.PATCH("/account", account.Patch)
+			authorized.GET("/username", account.Username)
+		}
+	}
+
 	r.Run(fmt.Sprintf(":%d", *port))
 }
