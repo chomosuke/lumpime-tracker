@@ -75,7 +75,7 @@ response: [
 ]
 ```
 
-## DELETE `\userData`
+## DELETE `/userData`
 ```
 request: auth_token
 String // url

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/chomosuke/film-list/api/account"
+	"github.com/chomosuke/film-list/api/userdata"
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,13 @@ func main() {
 		{
 			authorized.PATCH("/account", account.Patch)
 			authorized.GET("/username", account.Username)
+
+			userData := authorized.Group("/userData")
+			{
+				userData.DELETE("", userdata.Delete)
+				userData.GET("", userdata.Get)
+				userData.PUT("", userdata.Put)
+			}
 		}
 	}
 

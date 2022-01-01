@@ -18,8 +18,7 @@ type registerReq struct {
 
 func Register(c *gin.Context) {
 	var req registerReq
-	if c.ShouldBindJSON(&req) != nil {
-		c.Status(http.StatusUnprocessableEntity)
+	if c.BindJSON(&req) != nil {
 		return
 	}
 	if UsernameExist(req.Username) {

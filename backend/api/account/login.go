@@ -17,8 +17,7 @@ type loginReq struct {
 
 func Login(c *gin.Context) {
 	var req loginReq
-	if c.ShouldBindJSON(&req) != nil {
-		c.Status(http.StatusUnprocessableEntity)
+	if c.BindJSON(&req) != nil {
 		return
 	}
 	var user db.User

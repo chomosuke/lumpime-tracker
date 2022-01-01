@@ -48,7 +48,14 @@ func InitDb(connectionString string) (Database, func()) {
 }
 
 type User struct {
-	ID       *primitive.ObjectID `json:"ID" bson:"_id,omitempty"`
-	Username string              `json:"username" bson:"username"`
-	Password string              `json:"password" bson:"password"`
+	ID       *primitive.ObjectID `bson:"_id,omitempty"`
+	Username string              `bson:"username"`
+	Password string              `bson:"password"`
+}
+
+type UserData struct {
+	ID     *primitive.ObjectID `bson:"_id,omitempty"`
+	UserID *primitive.ObjectID `bson:"userId"`
+	Url    string              `bson:"url"`
+	Data   interface{}         `bson:"data"`
 }

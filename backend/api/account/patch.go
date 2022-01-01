@@ -18,8 +18,7 @@ type patchReq struct {
 
 func Patch(c *gin.Context) {
 	var req patchReq
-	if c.ShouldBindJSON(&req) != nil {
-		c.Status(http.StatusUnprocessableEntity)
+	if c.BindJSON(&req) != nil {
 		return
 	}
 	user := c.MustGet(auth.User).(db.User)
