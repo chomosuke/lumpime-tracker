@@ -9,13 +9,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-type DB struct {
+var DB *Database
+
+type Database struct {
 	DB        *mongo.Database
 	Users     *mongo.Collection
 	UserDatas *mongo.Collection
 }
 
-func InitDb(connectionString *string) (*DB, func()) {
+func InitDb(connectionString *string) (*Database, func()) {
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(*connectionString))
 	if err != nil {
 		panic(err)
@@ -32,7 +34,7 @@ func InitDb(connectionString *string) (*DB, func()) {
 	}
 	databaseName := url.Path[1:] // remove /
 
-	db := new(DB)
+	db := new(Database)
 	db.DB = client.Database(databaseName)
 	db.Users = db.DB.Collection("users")
 	db.UserDatas = db.DB.Collection("userDatas")
