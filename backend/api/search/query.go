@@ -24,16 +24,21 @@ func Query(c *gin.Context) {
 		return
 	}
 
-	filter := bson.M{
-		"$text": bson.M{
-			"$search": query,
-		},
-	}
+	var filter bson.M
 	option := options.Find().
 		SetProjection(bson.M{}).
 		SetSkip(start).
-		SetLimit(limit).
-		SetSort(bson.M{"score": bson.M{"$meta": "textScore"}})
+		SetLimit(limit)
+	if query == "" {
+		filter = bson.M{}
+	} else {
+		filter = bson.M{
+			"$text": bson.M{
+				"$search": query,
+			},
+		}
+		option = option.SetSort(bson.M{"score": bson.M{"$meta": "textScore"}})
+	}
 	cursor, err := db.DBInst.Films.Find(
 		context.TODO(),
 		filter,
