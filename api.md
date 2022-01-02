@@ -47,12 +47,6 @@ request: none
 response: [String] // id
 ```
 
-## GET `/latest/?start&limit`
-```
-request: none
-response: [String] // id
-```
-
 ## GET `/film/:id`
 ```
 request: none
