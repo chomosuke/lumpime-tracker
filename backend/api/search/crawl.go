@@ -90,11 +90,8 @@ func crawlPage(res *http.Response) {
 			}
 			t := s.Parent().Contents().Get(2).Data
 			t = strings.TrimSpace(t)
-			var err error
-			episodes, err = strconv.Atoi(t)
-			if err != nil {
-				fmt.Printf("invalid Episodes text\n url: %s\n text: %s\n", res.Request.URL.String(), s.Text())
-			}
+			episodes, _ = strconv.Atoi(t)
+			// invalid ep probably means it's still airing
 		} else if s.Text() == "Genres:" || s.Text() == "Genre:" {
 			if len(genres) != 0 {
 				fmt.Printf("multiple Genre field?\n url: %s\n", res.Request.URL.String())
@@ -108,7 +105,7 @@ func crawlPage(res *http.Response) {
 			}
 			status = s.Parent().Contents().Get(2).Data
 			status = strings.TrimSpace(status)
-		} else if s.Text() == "Synonyms:" || s.Text() == "English:" {
+		} else if s.Text() == "Synonyms:" {
 			t := s.Parent().Contents().Get(2).Data
 			t = strings.TrimSpace(t)
 			names := strings.Split(t, ", ")
@@ -119,7 +116,8 @@ func crawlPage(res *http.Response) {
 	var imgUrl string
 	doc.Find(fmt.Sprintf("img.lazyload[alt='%s']", name)).Each(func(i int, s *goquery.Selection) {
 		if i != 0 {
-			fmt.Printf("multiple title img?\n url: %s\n", res.Request.URL.String())
+			// probably character name = title name
+			return
 		}
 		var exists bool
 		imgUrl, exists = s.Attr("data-src")
