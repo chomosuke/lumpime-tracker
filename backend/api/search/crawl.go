@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/net/context"
 )
 
@@ -23,9 +24,14 @@ func Crawl(c *gin.Context) {
 	}
 
 	err := db.DBInst.Films.Drop(context.TODO())
-	db.DBInst.Films.Indexes().CreateOne(context.Background(), mongo.IndexModel{
-		Keys: bson.M{"key_words": "text"},
+	db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+		{Keys: bson.M{"key_words": "text"}},
+		{Keys: bson.M{"status": 1}},
+		{Keys: bson.M{"genres": 1}},
+		{Keys: bson.M{"seasons": 1}},
+		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
 	})
+
 	if err != nil {
 		panic(err)
 	}
@@ -37,25 +43,26 @@ func crawl() {
 	lastCrawledId := 1
 	for id := 1; id < lastCrawledId+500; id++ {
 		url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
-		if res, exist := pageExist(url); exist {
-			go crawlPage(res)
+		res, exist := pageExist(url, http.StatusNotFound)
+		if exist {
+			crawlPage(res)
 			lastCrawledId = id
 		}
+		res.Body.Close()
 	}
 	fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
+	crawlSeasons()
 }
 
-func pageExist(url string) (*http.Response, bool) {
-	var res *http.Response
+func getPage(url string) *http.Response {
 	timeOut := 100 * time.Second
 	for {
-		var err error
-		res, err = http.Get(url)
+		res, err := http.Get(url)
 		if err != nil {
 			panic(err)
 		}
 		if res.StatusCode != http.StatusForbidden {
-			break
+			return res
 		} else {
 			fmt.Printf("403ed, retrying in %d seconds.\nUrl: %s\n", timeOut/time.Second, url)
 			res.Body.Close()
@@ -63,8 +70,11 @@ func pageExist(url string) (*http.Response, bool) {
 			timeOut *= 2
 		}
 	}
-	if res.StatusCode == http.StatusNotFound {
-		res.Body.Close()
+}
+
+func pageExist(url string, statusNotExist int) (*http.Response, bool) {
+	res := getPage(url)
+	if res.StatusCode == statusNotExist {
 		return res, false
 	} else if res.StatusCode == http.StatusOK {
 		return res, true
@@ -75,7 +85,6 @@ func pageExist(url string) (*http.Response, bool) {
 
 func crawlPage(res *http.Response) {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
-	defer res.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -87,9 +96,9 @@ func crawlPage(res *http.Response) {
 		name = s.Text()
 	})
 
-	var altNames []string
+	altNames := []string{}
 	var episodes int
-	var genres []string
+	genres := []string{}
 	var status string
 	doc.Find("span.dark_text").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "Episodes:" {
@@ -148,7 +157,65 @@ func crawlPage(res *http.Response) {
 		KeyWords: keyWords.String(),
 		ImgUrl:   imgUrl,
 		Episodes: episodes,
+		Seasons:  []int{},
 		Genres:   genres,
 		Status:   status,
+	})
+}
+
+const zeroYear = 1917
+
+var seasonMap = [4]string{
+	"winter",
+	"spring",
+	"summer",
+	"fall",
+}
+
+func intToSeason(i int) (int, string) {
+	year := i/4 + zeroYear
+	season := seasonMap[i%4]
+	return year, season
+}
+
+func crawlSeasons() {
+	exists := true
+	for i := 0; exists; i++ {
+		year, season := intToSeason(i)
+		url := fmt.Sprintf("https://myanimelist.net/anime/%d/%s", year, season)
+		var res *http.Response
+		res, exists = pageExist(url, http.StatusSeeOther)
+		if exists {
+			crawlSeason(res, i)
+		}
+		res.Body.Close()
+	}
+}
+
+func crawlSeason(res *http.Response, season int) {
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	doc.Find("a.link-title").Each(func(i int, s *goquery.Selection) {
+		url, exists := s.Attr("href")
+		if !exists {
+			fmt.Printf("href doesn't exist for anime? season:%d", season)
+		}
+		url = url[:strings.LastIndex(url, "/")]
+		_, err := db.DBInst.Films.UpdateOne(
+			context.TODO(),
+			bson.M{"url": url},
+			bson.M{
+				"$push": bson.M{
+					"seasons": season,
+				},
+			},
+		)
+
+		if err != nil {
+			panic(err)
+		}
 	})
 }

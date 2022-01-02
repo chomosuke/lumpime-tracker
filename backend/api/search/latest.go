@@ -11,8 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Query(c *gin.Context) {
-	query := c.Query("query")
+func Latest(c *gin.Context) {
 	start, err := strconv.ParseInt(c.DefaultQuery("start", "0"), 10, 64)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
@@ -24,20 +23,14 @@ func Query(c *gin.Context) {
 		return
 	}
 
-	filter := bson.M{
-		"$text": bson.M{
-			"$search": query,
-		},
-	}
-	option := options.Find().
-		SetProjection(bson.M{}).
-		SetSkip(start).
-		SetLimit(limit).
-		SetSort(bson.M{"score": bson.M{"$meta": "textScore"}})
 	cursor, err := db.DBInst.Films.Find(
 		context.TODO(),
-		filter,
-		option,
+		bson.M{},
+		options.Find().
+			SetProjection(bson.M{}).
+			SetSort(bson.M{"seasons": -1}).
+			SetSkip(start).
+			SetLimit(limit),
 	)
 	if err != nil {
 		panic(err)
