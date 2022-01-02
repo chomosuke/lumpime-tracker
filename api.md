@@ -10,7 +10,7 @@ request: {
     username: String,
     password: String,
 }
-response: auth_token: String
+response: String // auth_token
 ```
 
 ## POST `/register`
@@ -19,15 +19,15 @@ request: {
     username: String,
     password: String,
 }
-response: auth_token: String
+response: String // auth_token
 ```
 
 ## PATCH `/account`
 ```
 request: auth_token
 {
-    username: String,
-    password: String,
+    username?: String,
+    password?: String,
 }
 response: none
 ```
@@ -40,7 +40,14 @@ response: String
 
 # Search & Get
 
-## GET `/query/?query&tags&start&limit`
+## GET `/query/?query&seasons&genres&start&limit`
+// seasons & genres will be seperated by ,
+```
+request: none
+response: [String] // id
+```
+
+## GET `/latest/?start&limit`
 ```
 request: none
 response: [String] // id
