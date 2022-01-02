@@ -11,6 +11,8 @@ import (
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/net/context"
 )
 
@@ -20,7 +22,13 @@ func Crawl(c *gin.Context) {
 		return
 	}
 
-	db.DBInst.Films.Drop(context.TODO())
+	err := db.DBInst.Films.Drop(context.TODO())
+	db.DBInst.Films.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys: bson.M{"key_words": "text"},
+	})
+	if err != nil {
+		panic(err)
+	}
 	go crawl()
 	c.Status(http.StatusAccepted)
 }
