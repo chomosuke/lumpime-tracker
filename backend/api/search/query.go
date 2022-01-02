@@ -24,19 +24,26 @@ func Query(c *gin.Context) {
 		return
 	}
 
-	cursor, err := db.DBInst.Films.Find(
-		context.TODO(),
-		bson.M{
+	var filter bson.M
+	option := options.Find().
+		SetProjection(bson.M{}).
+		SetSkip(start).
+		SetLimit(limit)
+	if query == "" {
+		filter = bson.M{}
+	} else {
+		filter = bson.M{
 			"$text": bson.M{
 				"$search": query,
 			},
-		},
+		}
+		option = option.SetSort(bson.M{"score": bson.M{"$meta": "textScore"}})
+	}
+	cursor, err := db.DBInst.Films.Find(
+		context.TODO(),
+		filter,
 
-		options.Find().
-			SetProjection(bson.M{}).
-			SetSort(bson.M{"score": bson.M{"$meta": "textScore"}}).
-			SetSkip(start).
-			SetLimit(limit),
+		option,
 	)
 	if err != nil {
 		panic(err)
@@ -49,6 +56,10 @@ func Query(c *gin.Context) {
 			panic(err)
 		}
 		results = append(results, result.ID.Hex())
+	}
+
+	if results == nil {
+		results = []string{}
 	}
 
 	c.JSON(http.StatusOK, results)
