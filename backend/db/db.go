@@ -63,8 +63,13 @@ type UserData struct {
 }
 
 type Film struct {
-	ID   *primitive.ObjectID `bson:"_id,omitempty"`
-	Url  string              `bson:"url"`
-	Name string              `bson:"name"`
-	Tags []string            `bson:"tags"`
+	ID       *primitive.ObjectID `bson:"_id,omitempty"`
+	Url      string              `bson:"url"`
+	Name     string              `bson:"name"`
+	AltNames []string            `bson:"alt_names"`
+	ImgUrl   string              `bson:"img_url"`
+	Episodes int                 `bson:"episodes"`
+	Seasons  []int               `bson:"seasons"`
+	Genres   []string            `bson:"genres"`
+	Status   string              `bson:"status"`
 }

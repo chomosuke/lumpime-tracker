@@ -15,7 +15,7 @@ import (
 func main() {
 	// parse cmd args first
 	port := flag.Int("p", 80, "port for the server")
-	dbConnection := flag.String("c", "", "connection string for mongodb database")
+	dbConnection := flag.String("c", "mongodb://localhost:27017/film-list", "connection string for mongodb database")
 	auth.Secret = flag.String("s", "an insecure secret", "secret for authentication")
 
 	flag.Parse()

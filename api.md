@@ -38,14 +38,27 @@ request: auth_token
 response: String
 ```
 
-# Search
+# Search & get
 
 ## GET `/query/?title&tag&rangeStart&rangeEnd`
 ```
 request: none
-response: [
-    String // url
-]
+response: [String] // id
+```
+
+## GET `/film/:id`
+```
+request: none
+response: {
+    url: String
+    name: String
+    alt_names: [String]
+    img_url: String
+    episodes: int
+    seasons: [int]
+    genres: [String]
+    status: String
+}
 ```
 
 # User data
