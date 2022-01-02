@@ -18,9 +18,9 @@ func Delete(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	filter := bson.D{
-		{Key: "url", Value: string(url)},
-		{Key: "userId", Value: user.ID},
+	filter := bson.M{
+		"url":    string(url),
+		"userId": user.ID,
 	}
 	result, err := db.DBInst.UserDatas.DeleteOne(context.TODO(), filter)
 	if err != nil {

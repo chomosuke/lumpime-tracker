@@ -21,9 +21,9 @@ func Login(c *gin.Context) {
 		return
 	}
 	var user db.User
-	err := db.DBInst.Users.FindOne(context.TODO(), bson.D{
-		{Key: "username", Value: req.Username},
-		{Key: "password", Value: req.Password},
+	err := db.DBInst.Users.FindOne(context.TODO(), bson.M{
+		"username": req.Username,
+		"password": req.Password,
 	}).Decode(&user)
 	if err != nil {
 		c.Status(http.StatusUnauthorized)

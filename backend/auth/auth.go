@@ -34,7 +34,7 @@ func Middleware(c *gin.Context) {
 			id, _ := primitive.ObjectIDFromHex(claims["ID"].(string))
 			err := db.DBInst.Users.FindOne(
 				context.TODO(),
-				bson.D{{Key: "_id", Value: id}},
+				bson.M{"_id": id},
 			).Decode(&user)
 			if err == nil {
 				c.Set(User, user)

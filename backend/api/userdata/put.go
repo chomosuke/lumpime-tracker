@@ -26,9 +26,9 @@ func Put(c *gin.Context) {
 		Url:    req.Url,
 		Data:   req.Data,
 	}
-	filter := bson.D{
-		{Key: "url", Value: req.Url},
-		{Key: "userId", Value: user.ID},
+	filter := bson.M{
+		"url":    req.Url,
+		"userId": user.ID,
 	}
 	if db.DBInst.UserDatas.FindOne(context.TODO(), filter).Err() == nil {
 		result, err := db.DBInst.UserDatas.ReplaceOne(context.TODO(), filter, userData)

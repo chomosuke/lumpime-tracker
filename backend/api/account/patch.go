@@ -39,7 +39,7 @@ func Patch(c *gin.Context) {
 	}
 	result, err := db.DBInst.Users.ReplaceOne(
 		context.TODO(),
-		bson.D{{Key: "_id", Value: user.ID}},
+		bson.M{"_id": user.ID},
 		user,
 	)
 	if err != nil {

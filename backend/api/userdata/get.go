@@ -12,7 +12,7 @@ import (
 
 func Get(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
-	cursor, err := db.DBInst.UserDatas.Find(context.TODO(), bson.D{{Key: "userId", Value: user.ID}})
+	cursor, err := db.DBInst.UserDatas.Find(context.TODO(), bson.M{"userId": user.ID})
 	if err != nil {
 		panic(err)
 	}

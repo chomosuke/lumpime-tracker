@@ -38,7 +38,7 @@ func Register(c *gin.Context) {
 }
 
 func UsernameExist(username string) bool {
-	return db.DBInst.Users.FindOne(context.TODO(), bson.D{
-		{Key: "username", Value: username},
+	return db.DBInst.Users.FindOne(context.TODO(), bson.M{
+		"username": username,
 	}).Err() == nil
 }

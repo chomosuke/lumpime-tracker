@@ -39,7 +39,7 @@ func crawl() {
 
 func pageExist(url string) (*http.Response, bool) {
 	var res *http.Response
-	timeOut := 160 * time.Second
+	timeOut := 100 * time.Second
 	for {
 		var err error
 		res, err = http.Get(url)
@@ -126,10 +126,18 @@ func crawlPage(res *http.Response) {
 		}
 	})
 
+	var keyWords strings.Builder
+
+	keyWords.WriteString(name)
+	for _, altName := range altNames {
+		keyWords.WriteString(" " + altName)
+	}
+
 	db.DBInst.Films.InsertOne(context.TODO(), db.Film{
 		Url:      res.Request.URL.String(),
 		Name:     name,
 		AltNames: altNames,
+		KeyWords: keyWords.String(),
 		ImgUrl:   imgUrl,
 		Episodes: episodes,
 		Genres:   genres,
