@@ -9,6 +9,7 @@ import (
 	"github.com/chomosuke/film-list/api/userdata"
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -55,6 +56,8 @@ func main() {
 			}
 		}
 	}
+
+	r.Use(static.Serve("/", static.LocalFile("../web_build", true)))
 
 	r.Run(fmt.Sprintf(":%d", *port))
 }
