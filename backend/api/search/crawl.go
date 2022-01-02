@@ -61,10 +61,15 @@ func getPage(url string) *http.Response {
 		if err != nil {
 			panic(err)
 		}
-		if res.StatusCode != http.StatusForbidden {
+		if res.StatusCode == http.StatusOK || res.StatusCode == http.StatusNotFound {
 			return res
 		} else {
-			fmt.Printf("403ed, retrying in %d seconds.\nUrl: %s\n", timeOut/time.Second, url)
+			fmt.Printf(
+				"%d, retrying in %d seconds.\nUrl: %s\n",
+				res.StatusCode,
+				timeOut/time.Second,
+				url,
+			)
 			res.Body.Close()
 			time.Sleep(timeOut)
 			timeOut *= 2
