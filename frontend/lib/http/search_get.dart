@@ -7,7 +7,48 @@ import 'package:http_status_code/http_status_code.dart';
 
 Future<List<String>> query(
   String query,
-  List<String> tags,
+  List<int> seasons,
+  List<String> genres,
   int start,
   int limit,
-) async {}
+) async {
+  String url = apiUrl.resolve('query').toString();
+  url += '?query=' + query;
+  url += '&seasons=' + seasons.join(',');
+  url += '&genres=' + genres.join(',');
+  url += '&start=' + start.toString();
+  url += '&limit=' + limit.toString();
+  final res = await http.get(Uri.parse(url));
+  if (res.statusCode == StatusCode.OK) {
+    return List.from(jsonDecode(res.body));
+  }
+  throw Error();
+}
+
+class Film {
+  final String url;
+  final String name;
+  final List<String> altNames;
+  final String imgUrl;
+  final int episodes;
+  final List<int> seasons;
+  final List<String> genres;
+  final String status;
+  Film.fromMap(Map<String, dynamic> map)
+      : url = map["url"],
+        name = map['name'],
+        altNames = List.from(map['alt_names']),
+        imgUrl = map['img_url'],
+        episodes = map['episodes'],
+        seasons = List.from(map['seasons']),
+        genres = List.from(map['genres']),
+        status = map['status'];
+}
+
+Future<Film> filmGet(String id) async {
+  final res = await http.get(apiUrl.resolve('film/$id'));
+  if (res.statusCode == StatusCode.OK) {
+    return Film.fromMap(jsonDecode(res.body));
+  }
+  throw Error();
+}

@@ -12,8 +12,6 @@ import (
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/net/context"
 )
 
@@ -23,45 +21,45 @@ func Crawl(c *gin.Context) {
 		return
 	}
 
-	err := db.DBInst.Films.Drop(context.TODO())
-	db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
-		{Keys: bson.M{"key_words": "text"}},
-		{Keys: bson.M{"status": 1}},
-		{Keys: bson.M{"genres": 1}},
-		{Keys: bson.M{"seasons": 1}},
-		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
-	})
+	// err := db.DBInst.Films.Drop(context.TODO())
+	// db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+	// 	{Keys: bson.M{"key_words": "text"}},
+	// 	{Keys: bson.M{"status": 1}},
+	// 	{Keys: bson.M{"genres": 1}},
+	// 	{Keys: bson.M{"seasons": 1}},
+	// 	{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
+	// })
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	if err != nil {
-		panic(err)
-	}
 	go crawl()
 	c.Status(http.StatusAccepted)
 }
 
 func crawl() {
-	lastCrawledId := 1
-	for id := 1; id < lastCrawledId+500; id++ {
-		url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
-		res, exist := pageExist(url, http.StatusNotFound)
-		if exist {
-			crawlPage(res)
-			lastCrawledId = id
-		}
-		res.Body.Close()
-	}
-	fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
+	// lastCrawledId := 1
+	// for id := 1; id < lastCrawledId+500; id++ {
+	// 	url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
+	// 	res, exist := pageExist(url, http.StatusNotFound)
+	// 	if exist {
+	// 		crawlPage(res)
+	// 		lastCrawledId = id
+	// 	}
+	// 	res.Body.Close()
+	// }
+	// fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
 	crawlSeasons()
 }
 
-func getPage(url string) *http.Response {
+func getPage(url string, statusNotExist int) *http.Response {
 	timeOut := 100 * time.Second
 	for {
 		res, err := http.Get(url)
 		if err != nil {
 			panic(err)
 		}
-		if res.StatusCode == http.StatusOK || res.StatusCode == http.StatusNotFound {
+		if res.StatusCode == http.StatusOK || res.StatusCode == statusNotExist {
 			return res
 		} else {
 			fmt.Printf(
@@ -78,7 +76,7 @@ func getPage(url string) *http.Response {
 }
 
 func pageExist(url string, statusNotExist int) (*http.Response, bool) {
-	res := getPage(url)
+	res := getPage(url, statusNotExist)
 	if res.StatusCode == statusNotExist {
 		return res, false
 	} else if res.StatusCode == http.StatusOK {

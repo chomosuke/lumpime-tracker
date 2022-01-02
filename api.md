@@ -40,6 +40,15 @@ response: String
 
 # Search & Get
 
+## GET `/meta`
+```
+request: none
+response: {
+    newest: int
+    genres: [String]
+}
+```
+
 ## GET `/query/?query&seasons&genres&start&limit`
 // seasons & genres will be seperated by ,
 ```
