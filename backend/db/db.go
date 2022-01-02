@@ -52,9 +52,6 @@ func InitDb(connectionString string) (Database, func()) {
 		Keys:    bson.M{"userId": 1, "url": 1},
 		Options: options.Index().SetUnique(true),
 	})
-	db.Films.Indexes().CreateOne(context.Background(), mongo.IndexModel{
-		Keys: bson.M{"key_words": "text"},
-	})
 
 	return *db, func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
