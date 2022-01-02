@@ -38,7 +38,7 @@ request: auth_token
 response: String
 ```
 
-# Search & get
+# Search & Get
 
 ## GET `/query/?query&tags&start&limit`
 ```
