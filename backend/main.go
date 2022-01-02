@@ -28,6 +28,11 @@ func main() {
 	// configurate and start the server.
 	r := gin.Default()
 
+	err := r.SetTrustedProxies(nil)
+	if err != nil {
+		panic(err)
+	}
+
 	endpoints := r.Group("/api")
 	{
 		endpoints.POST("/crawl", search.Crawl)
