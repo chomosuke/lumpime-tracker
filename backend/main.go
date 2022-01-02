@@ -31,6 +31,7 @@ func main() {
 	endpoints := r.Group("/api")
 	{
 		endpoints.POST("/crawl", search.Crawl)
+		endpoints.GET("/query", search.Query)
 
 		endpoints.POST("/login", account.Login)
 		endpoints.POST("/register", account.Register)

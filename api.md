@@ -40,7 +40,7 @@ response: String
 
 # Search & get
 
-## GET `/query/?title&tag&rangeStart&rangeEnd`
+## GET `/query/?query&tags&start&limit`
 ```
 request: none
 response: [String] // id

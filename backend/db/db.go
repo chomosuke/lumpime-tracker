@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/url"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -42,6 +43,19 @@ func InitDb(connectionString string) (Database, func()) {
 	db.UserDatas = db.DB.Collection("userDatas")
 	db.Films = db.DB.Collection("films")
 
+	// create indexes
+	db.Users.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.M{"username": 1},
+		Options: options.Index().SetUnique(true),
+	})
+	db.UserDatas.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.M{"userId": 1, "url": 1},
+		Options: options.Index().SetUnique(true),
+	})
+	db.Films.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys: bson.M{"key_words": "text"},
+	})
+
 	return *db, func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			panic(err)
@@ -67,6 +81,7 @@ type Film struct {
 	Url      string              `bson:"url"`
 	Name     string              `bson:"name"`
 	AltNames []string            `bson:"alt_names"`
+	KeyWords string              `bson:"key_words"`
 	ImgUrl   string              `bson:"img_url"`
 	Episodes int                 `bson:"episodes"`
 	Seasons  []int               `bson:"seasons"`
