@@ -38,6 +38,7 @@ func main() {
 	{
 		endpoints.POST("/crawl", search.Crawl)
 		endpoints.GET("/query", search.Query)
+		endpoints.GET("/film/:id", search.Film)
 
 		endpoints.POST("/login", account.Login)
 		endpoints.POST("/register", account.Register)
