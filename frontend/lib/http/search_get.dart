@@ -44,12 +44,17 @@ class Film {
         status = map['status'];
 }
 
+final _filmCache = <String, Film>{};
+
 Future<Film> filmGet(String id) async {
-  final res = await http.get(apiUrl.resolve('film/$id'));
-  if (res.statusCode != StatusCode.OK) {
-    throw Error();
+  if (!_filmCache.containsKey(id)) {
+    final res = await http.get(apiUrl.resolve('film/$id'));
+    if (res.statusCode != StatusCode.OK) {
+      throw Error();
+    }
+    _filmCache[id] = Film.fromMap(jsonDecode(res.body));
   }
-  return Film.fromMap(jsonDecode(res.body));
+  return _filmCache[id]!;
 }
 
 class Meta {
@@ -60,10 +65,15 @@ class Meta {
         genres = List.from(map['genres']);
 }
 
+Meta? _meta;
+
 Future<Meta> metaGet() async {
-  final res = await http.get(apiUrl.resolve('meta'));
-  if (res.statusCode != StatusCode.OK) {
-    throw Error();
+  if (_meta == null) {
+    final res = await http.get(apiUrl.resolve('meta'));
+    if (res.statusCode != StatusCode.OK) {
+      throw Error();
+    }
+    _meta = Meta.fromMap(jsonDecode(res.body));
   }
-  return Meta.fromMap(jsonDecode(res.body));
+  return _meta!;
 }
