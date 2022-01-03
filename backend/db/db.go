@@ -64,6 +64,7 @@ type User struct {
 	ID       *primitive.ObjectID `bson:"_id,omitempty"`
 	Username string              `bson:"username"`
 	Password string              `bson:"password"`
+	Data     interface{}         `bson:"data"`
 }
 
 type UserData struct {

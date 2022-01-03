@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func Get(c *gin.Context) {
+func GetFilm(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
 	cursor, err := db.DBInst.UserDatas.Find(context.TODO(), bson.M{"userId": user.ID})
 	if err != nil {
@@ -23,5 +23,15 @@ func Get(c *gin.Context) {
 	if results == nil {
 		results = []bson.M{}
 	}
-	c.JSON(http.StatusOK, results)
+	res := []bson.M{}
+	for _, result := range results {
+		res = append(
+			res,
+			bson.M{
+				"url":  result["url"],
+				"data": result["data"],
+			},
+		)
+	}
+	c.JSON(http.StatusOK, res)
 }

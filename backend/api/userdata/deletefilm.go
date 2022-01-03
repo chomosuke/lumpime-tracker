@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func Delete(c *gin.Context) {
+func DeleteFilm(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
 	url, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {

@@ -22,7 +22,7 @@ request: {
 response: String // auth_token
 ```
 
-## PATCH `/account`
+## PATCH `/user`
 ```
 request: auth_token
 {
@@ -73,7 +73,7 @@ response: {
 
 # User data
 
-## PUT `/userData`
+## PUT `/user/film`
 ```
 request: auth_token
 {
@@ -85,7 +85,7 @@ request: auth_token
 response: none
 ```
 
-## GET `/userData`
+## GET `/user/film`
 ```
 request: auth_token
 response: [
@@ -98,9 +98,22 @@ response: [
 ]
 ```
 
-## DELETE `/userData`
+## DELETE `/user/film`
 ```
 request: auth_token
 String // url
 response: none
 ```
+
+## PUT `/user/data`
+request: auth_token
+{
+    // arbitary json object
+}
+response: none
+
+## GET `/user/data`
+request: auth_token
+response: {
+    // arbitary json object
+}

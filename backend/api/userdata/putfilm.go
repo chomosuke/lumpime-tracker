@@ -15,7 +15,7 @@ type putReq struct {
 	Data interface{} `json:"data" binding:"required"`
 }
 
-func Put(c *gin.Context) {
+func PutFilm(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
 	var req putReq
 	if c.BindJSON(&req) != nil {

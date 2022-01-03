@@ -46,14 +46,16 @@ func main() {
 		authorized := endpoints.Group("/")
 		authorized.Use(auth.Middleware)
 		{
-			authorized.PATCH("/account", account.Patch)
+			authorized.PATCH("/user", account.Patch)
 			authorized.GET("/username", account.Username)
 
-			userData := authorized.Group("/userData")
+			userData := authorized.Group("/user")
 			{
-				userData.DELETE("", userdata.Delete)
-				userData.GET("", userdata.Get)
-				userData.PUT("", userdata.Put)
+				userData.DELETE("/film", userdata.DeleteFilm)
+				userData.GET("/film", userdata.GetFilm)
+				userData.PUT("/film", userdata.PutFilm)
+				userData.GET("/data", userdata.GetData)
+				userData.PUT("/data", userdata.PutData)
 			}
 		}
 	}
