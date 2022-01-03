@@ -36,6 +36,7 @@ func main() {
 
 	endpoints := r.Group("/api")
 	{
+		endpoints.GET("/meta", search.Meta)
 		endpoints.POST("/crawl", search.Crawl)
 		endpoints.GET("/query", search.Query)
 		endpoints.GET("/film/:id", search.Film)
