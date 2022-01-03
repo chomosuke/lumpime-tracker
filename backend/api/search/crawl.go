@@ -12,6 +12,8 @@ import (
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/net/context"
 )
 
@@ -21,41 +23,46 @@ func Crawl(c *gin.Context) {
 		return
 	}
 
-	// err := db.DBInst.Films.Drop(context.TODO())
-	// db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
-	// 	{Keys: bson.M{"key_words": "text"}},
-	// 	{Keys: bson.M{"status": 1}},
-	// 	{Keys: bson.M{"genres": 1}},
-	// 	{Keys: bson.M{"seasons": 1}},
-	// 	{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
-	// })
-	// if err != nil {
-	// 	panic(err)
-	// }
+	err := db.DBInst.Films.Drop(context.TODO())
+	db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+		{Keys: bson.M{"key_words": "text"}},
+		{Keys: bson.M{"status": 1}},
+		{Keys: bson.M{"genres": 1}},
+		{Keys: bson.M{"seasons": 1}},
+		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
+	})
+	if err != nil {
+		panic(err)
+	}
 
 	go crawl()
 	c.Status(http.StatusAccepted)
 }
 
 func crawl() {
-	// lastCrawledId := 1
-	// for id := 1; id < lastCrawledId+500; id++ {
-	// 	url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
-	// 	res, exist := pageExist(url, http.StatusNotFound)
-	// 	if exist {
-	// 		crawlPage(res)
-	// 		lastCrawledId = id
-	// 	}
-	// 	res.Body.Close()
-	// }
-	// fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
+	lastCrawledId := 1
+	for id := 1; id < lastCrawledId+500; id++ {
+		url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
+		res, exist := pageExist(url, http.StatusNotFound)
+		if exist {
+			crawlPage(res)
+			lastCrawledId = id
+		}
+		res.Body.Close()
+	}
 	crawlSeasons()
+	fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
 }
 
 func getPage(url string, statusNotExist int) *http.Response {
 	timeOut := 100 * time.Second
 	for {
-		res, err := http.Get(url)
+		client := &http.Client{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				return http.ErrUseLastResponse
+			},
+		}
+		res, err := client.Get(url)
 		if err != nil {
 			panic(err)
 		}
@@ -185,10 +192,11 @@ func crawlSeasons() {
 	exists := true
 	for i := 0; exists; i++ {
 		year, season := intToSeason(i)
-		url := fmt.Sprintf("https://myanimelist.net/anime/%d/%s", year, season)
+		url := fmt.Sprintf("https://myanimelist.net/anime/season/%d/%s", year, season)
 		var res *http.Response
 		res, exists = pageExist(url, http.StatusSeeOther)
 		if exists {
+			fmt.Println("crawling: " + url)
 			crawlSeason(res, i)
 		}
 		res.Body.Close()
@@ -207,7 +215,7 @@ func crawlSeason(res *http.Response, season int) {
 			fmt.Printf("href doesn't exist for anime? season:%d", season)
 		}
 		url = url[:strings.LastIndex(url, "/")]
-		_, err := db.DBInst.Films.UpdateOne(
+		result, err := db.DBInst.Films.UpdateOne(
 			context.TODO(),
 			bson.M{"url": url},
 			bson.M{
@@ -216,7 +224,9 @@ func crawlSeason(res *http.Response, season int) {
 				},
 			},
 		)
-
+		if result.MatchedCount != 1 {
+			panic(result.MatchedCount)
+		}
 		if err != nil {
 			panic(err)
 		}
