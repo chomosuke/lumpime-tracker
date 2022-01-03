@@ -5,35 +5,18 @@ import 'url.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
 
-class UserFilmData {
+class UserFilm {
   final int uptoEpisode;
-  final List<String> lists;
-  UserFilmData(this.uptoEpisode, this.lists);
+  UserFilm(this.uptoEpisode);
   toMap() => <String, dynamic>{
         'uptoEpisode': uptoEpisode,
-        'lists': lists,
       };
-  UserFilmData.fromMap(Map<String, dynamic> map)
-      : uptoEpisode = map['uptoEpisode'],
-        lists = List.from(map['lists']);
+  UserFilm.fromMap(Map<String, dynamic> map) : uptoEpisode = map['uptoEpisode'];
 }
 
-class UserFilm {
-  final String url;
-  final UserFilmData data;
-  UserFilm(this.url, this.data);
-  toMap() => <String, dynamic>{
-        'url': url,
-        'data': data.toMap(),
-      };
-  UserFilm.fromMap(Map<String, dynamic> map)
-      : url = map['url'],
-        data = UserFilmData.fromMap(map['data']);
-}
-
-Future<void> userFilmPut(UserFilm userFilm) async {
+Future<void> userFilmPut(String id, UserFilm userFilm) async {
   final res = await http.put(
-    apiUrl.resolve('user/film'),
+    apiUrl.resolve('user/film/$id'),
     headers: await jsonAuthHeader(),
     body: jsonEncode(userFilm.toMap()),
   );
@@ -42,9 +25,9 @@ Future<void> userFilmPut(UserFilm userFilm) async {
   }
 }
 
-Future<List<UserFilm>> userFilmGet() async {
+Future<List<UserFilm>> userFilmGet(String id) async {
   final res = await http.get(
-    apiUrl.resolve('user/film'),
+    apiUrl.resolve('user/film/$id'),
     headers: await authHeader(),
   );
   if (res.statusCode != StatusCode.OK) {
@@ -53,17 +36,6 @@ Future<List<UserFilm>> userFilmGet() async {
   final body = List.from(jsonDecode(res.body));
   final films = body.map((film) => UserFilm.fromMap(film)).toList();
   return films;
-}
-
-Future<void> userFilmDelete(String url) async {
-  final res = await http.delete(
-    apiUrl.resolve('user/film'),
-    headers: await jsonAuthHeader(),
-    body: url,
-  );
-  if (res.statusCode != StatusCode.OK) {
-    throw Error();
-  }
 }
 
 class UserData {
