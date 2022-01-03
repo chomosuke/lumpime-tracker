@@ -52,9 +52,8 @@ func main() {
 
 			userData := authorized.Group("/user")
 			{
-				userData.DELETE("/film", userdata.DeleteFilm)
-				userData.GET("/film", userdata.GetFilm)
-				userData.PUT("/film", userdata.PutFilm)
+				userData.GET("/film/:id", userdata.GetFilm)
+				userData.PUT("/film/:id", userdata.PutFilm)
 				userData.GET("/data", userdata.GetData)
 				userData.PUT("/data", userdata.PutData)
 			}

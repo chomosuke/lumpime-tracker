@@ -8,30 +8,30 @@ import (
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetFilm(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
-	cursor, err := db.DBInst.UserDatas.Find(context.TODO(), bson.M{"userId": user.ID})
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		panic(err)
+		c.Status(http.StatusNotFound)
+		return
 	}
-	var results []bson.M
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		panic(err)
+	err = db.DBInst.Films.FindOne(context.TODO(), bson.M{"_id": id}).Err()
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
 	}
-	if results == nil {
-		results = []bson.M{}
+	var userFilm db.UserFilm
+	err = db.DBInst.UserFilms.FindOne(
+		context.TODO(),
+		bson.M{"userId": user.ID, "filmId": id},
+	).Decode(&userFilm)
+	if err != nil {
+		// not found
+		c.JSON(http.StatusOK, bson.M{})
+	} else {
+		c.JSON(http.StatusOK, userFilm.Data.(bson.D).Map())
 	}
-	res := []bson.M{}
-	for _, result := range results {
-		res = append(
-			res,
-			bson.M{
-				"url":  result["url"],
-				"data": result["data"],
-			},
-		)
-	}
-	c.JSON(http.StatusOK, res)
 }

@@ -8,35 +8,42 @@ import (
 	"github.com/chomosuke/film-list/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-type putReq struct {
-	Url  string      `json:"url" binding:"required"`
-	Data interface{} `json:"data" binding:"required"`
-}
 
 func PutFilm(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
-	var req putReq
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	var req interface{}
 	if c.BindJSON(&req) != nil {
 		return
 	}
-	userData := db.UserData{
+	err = db.DBInst.Films.FindOne(context.TODO(), bson.M{"_id": id}).Err()
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	userData := db.UserFilm{
 		UserID: user.ID,
-		Url:    req.Url,
-		Data:   req.Data,
+		FilmID: &id,
+		Data:   req,
 	}
 	filter := bson.M{
-		"url":    req.Url,
+		"filmId": &id,
 		"userId": user.ID,
 	}
-	if db.DBInst.UserDatas.FindOne(context.TODO(), filter).Err() == nil {
-		result, err := db.DBInst.UserDatas.ReplaceOne(context.TODO(), filter, userData)
+	if db.DBInst.UserFilms.FindOne(context.TODO(), filter).Err() == nil {
+		result, err := db.DBInst.UserFilms.ReplaceOne(context.TODO(), filter, userData)
 		if err != nil || result.MatchedCount != 1 {
 			panic(err)
 		}
 	} else {
-		_, err := db.DBInst.UserDatas.InsertOne(context.TODO(), userData)
+		_, err := db.DBInst.UserFilms.InsertOne(context.TODO(), userData)
 		if err != nil {
 			panic(err)
 		}

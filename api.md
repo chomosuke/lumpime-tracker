@@ -73,36 +73,21 @@ response: {
 
 # User data
 
-## PUT `/user/film`
+## PUT `/user/film/:id`
 ```
 request: auth_token
 {
-    url: String,
-    data: {
-        // arbitary json object.
-    }
+    // arbitary json object.
 }
 response: none
 ```
 
-## GET `/user/film`
+## GET `/user/film/:id`
 ```
 request: auth_token
-response: [
-    {
-        url: String,
-        data: {
-            // arbitary json object.
-        }
-    }
-]
-```
-
-## DELETE `/user/film`
-```
-request: auth_token
-String // url
-response: none
+response: {
+    // arbitary json object.
+}
 ```
 
 ## PUT `/user/data`

@@ -16,7 +16,7 @@ var DBInst Database
 type Database struct {
 	DB        *mongo.Database
 	Users     *mongo.Collection
-	UserDatas *mongo.Collection
+	UserFilms *mongo.Collection
 	Films     *mongo.Collection
 }
 
@@ -40,7 +40,7 @@ func InitDb(connectionString string) (Database, func()) {
 	db := new(Database)
 	db.DB = client.Database(databaseName)
 	db.Users = db.DB.Collection("users")
-	db.UserDatas = db.DB.Collection("userDatas")
+	db.UserFilms = db.DB.Collection("userFilms")
 	db.Films = db.DB.Collection("films")
 
 	// create indexes
@@ -48,8 +48,8 @@ func InitDb(connectionString string) (Database, func()) {
 		Keys:    bson.M{"username": 1},
 		Options: options.Index().SetUnique(true),
 	})
-	db.UserDatas.Indexes().CreateOne(context.Background(), mongo.IndexModel{
-		Keys:    bson.M{"userId": 1, "url": 1},
+	db.UserFilms.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.M{"userId": 1, "filmId": 1},
 		Options: options.Index().SetUnique(true),
 	})
 
@@ -67,10 +67,10 @@ type User struct {
 	Data     interface{}         `bson:"data"`
 }
 
-type UserData struct {
+type UserFilm struct {
 	ID     *primitive.ObjectID `bson:"_id,omitempty"`
 	UserID *primitive.ObjectID `bson:"userId"`
-	Url    string              `bson:"url"`
+	FilmID *primitive.ObjectID `bson:"filmId"`
 	Data   interface{}         `bson:"data"`
 }
 
