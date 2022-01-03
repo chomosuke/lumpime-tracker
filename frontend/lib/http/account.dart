@@ -6,9 +6,12 @@ import 'package:frontend/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
 
-const jsonHeader = <String, String>{
-  HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-};
+Future<Map<String, String>> jsonAuthHeader() async {
+  final header = <String, String>{};
+  header.addAll(jsonHeader);
+  header.addAll(await authHeader());
+  return header;
+}
 
 const authKey = "auth_token";
 
@@ -67,7 +70,7 @@ Future<bool> accountPatch(String? username, String? password) async {
   }
   final res = await http.patch(
     apiUrl.resolve('account'),
-    headers: jsonHeader,
+    headers: await jsonAuthHeader(),
     body: jsonEncode(req),
   );
   if (res.statusCode == StatusCode.OK) {

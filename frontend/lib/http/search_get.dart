@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'url.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +34,7 @@ class Film {
   final List<String> genres;
   final String status;
   Film.fromMap(Map<String, dynamic> map)
-      : url = map["url"],
+      : url = map['url'],
         name = map['name'],
         altNames = List.from(map['alt_names']),
         imgUrl = map['img_url'],
@@ -49,6 +48,22 @@ Future<Film> filmGet(String id) async {
   final res = await http.get(apiUrl.resolve('film/$id'));
   if (res.statusCode == StatusCode.OK) {
     return Film.fromMap(jsonDecode(res.body));
+  }
+  throw Error();
+}
+
+class Meta {
+  final int newestSeason;
+  final List<String> genres;
+  Meta.fromMap(Map<String, dynamic> map)
+      : newestSeason = map['newest'],
+        genres = List.from(map['genres']);
+}
+
+Future<Meta> metaGet() async {
+  final res = await http.get(apiUrl.resolve('meta'));
+  if (res.statusCode == StatusCode.OK) {
+    return Meta.fromMap(jsonDecode(res.body));
   }
   throw Error();
 }
