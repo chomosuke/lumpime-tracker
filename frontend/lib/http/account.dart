@@ -13,7 +13,7 @@ Future<Map<String, String>> jsonAuthHeader() async {
   return header;
 }
 
-const authKey = "auth_token";
+const authKey = 'auth_token';
 
 Future<Map<String, String>> authHeader() async => <String, String>{
       HttpHeaders.authorizationHeader: await storage.read(key: authKey) ?? '',
@@ -27,8 +27,8 @@ Future<bool> login(String username, String password) async {
     apiUrl.resolve('login'),
     headers: jsonHeader,
     body: jsonEncode({
-      "username": username,
-      "password": password,
+      'username': username,
+      'password': password,
     }),
   );
   if (res.statusCode == StatusCode.OK) {
@@ -46,8 +46,8 @@ Future<bool> register(String username, String password) async {
     apiUrl.resolve('register'),
     headers: jsonHeader,
     body: jsonEncode({
-      "username": username,
-      "password": password,
+      'username': username,
+      'password': password,
     }),
   );
   if (res.statusCode == StatusCode.OK) {
@@ -93,4 +93,5 @@ Future<String?> username() async {
   if (res.statusCode == StatusCode.UNAUTHORIZED) {
     return null;
   }
+  throw Error();
 }

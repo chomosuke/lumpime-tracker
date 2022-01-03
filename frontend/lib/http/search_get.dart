@@ -18,10 +18,10 @@ Future<List<String>> query(
   url += '&start=' + start.toString();
   url += '&limit=' + limit.toString();
   final res = await http.get(Uri.parse(url));
-  if (res.statusCode == StatusCode.OK) {
-    return List.from(jsonDecode(res.body));
+  if (res.statusCode != StatusCode.OK) {
+    throw Error();
   }
-  throw Error();
+  return List.from(jsonDecode(res.body));
 }
 
 class Film {
@@ -46,10 +46,10 @@ class Film {
 
 Future<Film> filmGet(String id) async {
   final res = await http.get(apiUrl.resolve('film/$id'));
-  if (res.statusCode == StatusCode.OK) {
-    return Film.fromMap(jsonDecode(res.body));
+  if (res.statusCode != StatusCode.OK) {
+    throw Error();
   }
-  throw Error();
+  return Film.fromMap(jsonDecode(res.body));
 }
 
 class Meta {
@@ -62,8 +62,8 @@ class Meta {
 
 Future<Meta> metaGet() async {
   final res = await http.get(apiUrl.resolve('meta'));
-  if (res.statusCode == StatusCode.OK) {
-    return Meta.fromMap(jsonDecode(res.body));
+  if (res.statusCode != StatusCode.OK) {
+    throw Error();
   }
-  throw Error();
+  return Meta.fromMap(jsonDecode(res.body));
 }
