@@ -9,6 +9,7 @@ import (
 	"github.com/chomosuke/film-list/api/userdata"
 	"github.com/chomosuke/film-list/auth"
 	"github.com/chomosuke/film-list/db"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
@@ -33,6 +34,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	r.Use(cors.Default())
 
 	endpoints := r.Group("/api")
 	{
