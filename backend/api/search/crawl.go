@@ -41,7 +41,7 @@ func Crawl(c *gin.Context) {
 
 func crawl() {
 	lastCrawledId := 1
-	for id := 1; id < lastCrawledId+500; id++ {
+	for id := 1; id < lastCrawledId+2000; id++ {
 		url := fmt.Sprintf("https://myanimelist.net/anime/%d", id)
 		res, exist := pageExist(url, http.StatusNotFound)
 		if exist {
@@ -50,8 +50,9 @@ func crawl() {
 		}
 		res.Body.Close()
 	}
+	fmt.Printf("Last crawled id: %d\n", lastCrawledId)
 	crawlSeasons()
-	fmt.Printf("Crawled. Last crawled id: %d\n", lastCrawledId)
+	fmt.Println("Crawled.")
 }
 
 func getPage(url string, statusNotExist int) *http.Response {
