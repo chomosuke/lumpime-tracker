@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Card;
+import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Grid extends HookConsumerWidget {
@@ -20,17 +21,27 @@ class Grid extends HookConsumerWidget {
       );
     }
 
-    return GridView.extent(
-      padding: const EdgeInsets.all(30),
-      maxCrossAxisExtent: 182 * 2,
-      crossAxisSpacing: 30,
-      mainAxisSpacing: 30,
-      shrinkWrap: true,
-      children: filmIds
-          .map<Text>(
-            (filmId) => Text(filmId),
-          )
-          .toList(),
+    const maxCrossAxisExtent = 182 * 2.0;
+    return Center(
+      child: SizedBox(
+        width: maxCrossAxisExtent * 5,
+        child: GridView.extent(
+          padding: const EdgeInsets.all(30),
+          maxCrossAxisExtent: maxCrossAxisExtent,
+          childAspectRatio: 8 / 10,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
+          shrinkWrap: true,
+          children: filmIds
+              .map<Widget>(
+                (filmId) => Card(
+                  filmId: filmId,
+                  showEpisodeTracker: showEpisodeTracker,
+                ),
+              )
+              .toList(),
+        ),
+      ),
     );
   }
 }
