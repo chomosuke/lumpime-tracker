@@ -48,7 +48,7 @@ func main() {
 		r.Use(cors.New(config))
 
 		r.Use(func(c *gin.Context) {
-			time.Sleep(250 * time.Millisecond)
+			time.Sleep(500 * time.Millisecond)
 			c.Next()
 		})
 	}

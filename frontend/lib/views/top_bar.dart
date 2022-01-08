@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
 import 'forms/index.dart';
 import 'index.dart';
@@ -26,6 +27,12 @@ class TopBar extends HookConsumerWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Image.network(
+            baseUrl.resolve('favicon.png').toString(),
+            height: 56,
+            filterQuality: FilterQuality.medium,
+          ),
+          const SizedBox(width: 20),
           Text(
             appName,
             style: Theme.of(context).textTheme.headline4,

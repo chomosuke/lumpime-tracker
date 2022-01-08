@@ -6,6 +6,8 @@ class NavBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Material();
+    return SizedBox(
+      width: 56,
+    );
   }
 }

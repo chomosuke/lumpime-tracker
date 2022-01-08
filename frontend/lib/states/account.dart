@@ -115,7 +115,7 @@ class FilmIdLists {
   final Map<String, FilmIdList> _lists;
 
   Map<String, List<String>> _toListsMap() => _lists
-      .map((key, value) => MapEntry<String, List<String>>(key, value._list));
+      .map((key, value) => MapEntry<String, List<String>>(key, value.list));
 
   FilmIdLists._fromListsMap(Map<String, List<String>> mapLists)
       : _lists = mapLists.map((key, value) =>
@@ -132,27 +132,27 @@ class FilmIdLists {
 
   Future<void> _put() => http.userDataPut(http.UserData(_toListsMap()));
 
-  bool contains(String name, String filmId) => _lists[name]!.contains(filmId);
+  FilmIdList? operator [](String key) => _lists[key];
 }
 
 class FilmIdList {
-  final List<String> _list;
+  final List<String> list;
 
   final Set<String> _set;
-  FilmIdList._(this._list) : _set = _list.toSet();
+  FilmIdList._(this.list) : _set = list.toSet();
 
   void _add(String filmId) {
-    _list.add(filmId);
+    list.add(filmId);
     _set.add(filmId);
   }
 
   void _remove(String filmId) {
-    _list.remove(filmId);
+    list.remove(filmId);
     _set.remove(filmId);
   }
 
   void _removeAt(int i) {
-    _set.remove(_list.removeAt(i));
+    _set.remove(list.removeAt(i));
   }
 
   bool contains(String filmId) {

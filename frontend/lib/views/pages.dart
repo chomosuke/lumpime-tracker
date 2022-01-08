@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/states/index.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -16,18 +17,19 @@ class Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: SizedBox(
-        child: Column(
-          children: [
-            topBar,
-            Row(
+      child: Column(
+        children: [
+          topBar,
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 navBar,
-                page,
+                Expanded(child: page),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -38,10 +40,21 @@ class QueryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final queryResult = ref.watch(queryResultProvider);
+
     return Page(
       topBar: const TopBar(search: true),
       navBar: const NavBar(),
-      page: Text('placeholder'),
+      page: queryResult.when(
+        loading: () => const Center(
+          child: SizedBox(
+            width: 500,
+            child: LinearProgressIndicator(),
+          ),
+        ),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (queryResult) => Grid(queryResult.filmIds),
+      ),
     );
   }
 }
@@ -52,10 +65,23 @@ class FilmListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final accountData = ref.watch(accountDataProvider);
+
     return Page(
-      topBar: const TopBar(),
+      topBar: const TopBar(search: true),
       navBar: const NavBar(),
-      page: Text('placeholder'),
+      page: accountData.when(
+        loading: () => const Center(
+          child: SizedBox(
+            width: 500,
+            child: LinearProgressIndicator(),
+          ),
+        ),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (accountData) => accountData == null
+            ? const Center(child: Text('Log In to save anime to a list'))
+            : Grid(accountData.filmIdLists[listName]!.list),
+      ),
     );
   }
 }
