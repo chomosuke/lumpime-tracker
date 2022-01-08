@@ -109,7 +109,7 @@ func Query(c *gin.Context) {
 			}},
 			bson.D{{
 				Key:   "$project",
-				Value: bson.M{"_id": "$_id._id"},
+				Value: bson.M{"_id": "$_id._id", "matches": "$matches"},
 			}},
 		)
 	}
