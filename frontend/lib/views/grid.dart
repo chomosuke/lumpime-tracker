@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/states/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Grid extends HookConsumerWidget {
   final List<String> filmIds;
-  const Grid(this.filmIds, {Key? key}) : super(key: key);
+  final bool showEpisodeTracker;
+  const Grid(this.filmIds, {this.showEpisodeTracker = false, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

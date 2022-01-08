@@ -53,7 +53,11 @@ class QueryPage extends HookConsumerWidget {
           ),
         ),
         error: (error, stackTrace) => Text('Error: $error'),
-        data: (queryResult) => Grid(queryResult.filmIds),
+        data: (queryResult) => queryResult.filmIds.length == 0
+            ? const Center(
+                child: Text('No anime found'),
+              )
+            : Grid(queryResult.filmIds),
       ),
     );
   }
@@ -80,7 +84,10 @@ class FilmListPage extends HookConsumerWidget {
         error: (error, stackTrace) => Text('Error: $error'),
         data: (accountData) => accountData == null
             ? const Center(child: Text('Log In to save anime to a list'))
-            : Grid(accountData.filmIdLists[listName]!.list),
+            : Grid(
+                accountData.filmIdLists[listName]!.list,
+                showEpisodeTracker: listName == watching,
+              ),
       ),
     );
   }
@@ -92,9 +99,9 @@ class FilmPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Page(
-      topBar: const TopBar(),
-      navBar: const NavBar(),
+    return const Page(
+      topBar: TopBar(),
+      navBar: NavBar(),
       page: Text('placeholder'),
     );
   }
