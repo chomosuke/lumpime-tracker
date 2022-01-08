@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'user_data.dart';
 import 'url.dart';
 import 'package:frontend/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 import 'package:http_status_code/http_status_code.dart';
+
+String hash(String str) => sha512.convert(utf8.encode(str)).toString();
 
 Future<Map<String, String>> jsonAuthHeader() async {
   final header = <String, String>{};
@@ -22,13 +26,19 @@ Future<Map<String, String>> authHeader() async => <String, String>{
 Future<void> saveToken(String authToken) =>
     storage.write(key: authKey, value: authToken);
 
+Future<void> logout() async {
+  await storage.delete(key: authKey);
+  userFilmCache = {};
+  userDataCache = null;
+}
+
 Future<bool> login(String username, String password) async {
   final res = await http.post(
     apiUrl.resolve('login'),
     headers: jsonHeader,
     body: jsonEncode({
       'username': username,
-      'password': password,
+      'password': hash(password),
     }),
   );
   if (res.statusCode == StatusCode.OK) {
@@ -47,7 +57,7 @@ Future<bool> register(String username, String password) async {
     headers: jsonHeader,
     body: jsonEncode({
       'username': username,
-      'password': password,
+      'password': hash(password),
     }),
   );
   if (res.statusCode == StatusCode.OK) {
@@ -66,7 +76,7 @@ Future<bool> accountPatch(String? username, String? password) async {
     req['username'] = username;
   }
   if (password != null) {
-    req['password'] = password;
+    req['password'] = hash(password);
   }
   final res = await http.patch(
     apiUrl.resolve('account'),

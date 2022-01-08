@@ -6,13 +6,15 @@ import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
 
 class UserFilm {
-  final int uptoEpisode;
+  final int? uptoEpisode;
   UserFilm(this.uptoEpisode);
   toMap() => <String, dynamic>{
         'uptoEpisode': uptoEpisode,
       };
   UserFilm.fromMap(Map<String, dynamic> map) : uptoEpisode = map['uptoEpisode'];
 }
+
+var userFilmCache = <String, UserFilm>{};
 
 Future<void> userFilmPut(String id, UserFilm userFilm) async {
   final res = await http.put(
@@ -23,19 +25,21 @@ Future<void> userFilmPut(String id, UserFilm userFilm) async {
   if (res.statusCode != StatusCode.OK) {
     throw Error();
   }
+  userFilmCache[id] = userFilm;
 }
 
-Future<List<UserFilm>> userFilmGet(String id) async {
-  final res = await http.get(
-    apiUrl.resolve('user/film/$id'),
-    headers: await authHeader(),
-  );
-  if (res.statusCode != StatusCode.OK) {
-    throw Error();
+Future<UserFilm> userFilmGet(String id) async {
+  if (!userFilmCache.containsKey(id)) {
+    final res = await http.get(
+      apiUrl.resolve('user/film/$id'),
+      headers: await authHeader(),
+    );
+    if (res.statusCode != StatusCode.OK) {
+      throw Error();
+    }
+    userFilmCache[id] = UserFilm.fromMap(jsonDecode(res.body));
   }
-  final body = List.from(jsonDecode(res.body));
-  final films = body.map((film) => UserFilm.fromMap(film)).toList();
-  return films;
+  return userFilmCache[id]!;
 }
 
 class UserData {
@@ -46,6 +50,8 @@ class UserData {
       : lists = map.map((key, value) => MapEntry(key, List.from(value)));
 }
 
+UserData? userDataCache;
+
 Future<void> userDataPut(UserData userData) async {
   final res = await http.put(
     apiUrl.resolve('user/data'),
@@ -55,15 +61,19 @@ Future<void> userDataPut(UserData userData) async {
   if (res.statusCode != StatusCode.OK) {
     throw Error();
   }
+  userDataCache = userData;
 }
 
 Future<UserData> userDataGet() async {
-  final res = await http.get(
-    apiUrl.resolve('user/data'),
-    headers: await authHeader(),
-  );
-  if (res.statusCode != StatusCode.OK) {
-    throw Error();
+  if (userDataCache == null) {
+    final res = await http.get(
+      apiUrl.resolve('user/data'),
+      headers: await authHeader(),
+    );
+    if (res.statusCode != StatusCode.OK) {
+      throw Error();
+    }
+    userDataCache = UserData.fromMap(jsonDecode(res.body));
   }
-  return UserData.fromMap(jsonDecode(res.body));
+  return userDataCache!;
 }
