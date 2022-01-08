@@ -44,7 +44,7 @@ packages:
     source: hosted
     version: "1.15.0"
   crypto:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: crypto
       url: "https://pub.dartlang.org"
@@ -70,7 +70,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_hooks:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
@@ -91,7 +91,7 @@ packages:
     source: hosted
     version: "1.0.3"
   flutter_secure_storage:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_secure_storage
       url: "https://pub.dartlang.org"
@@ -143,14 +143,14 @@ packages:
     source: sdk
     version: "0.0.0"
   hooks_riverpod:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: hooks_riverpod
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
   http:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -164,7 +164,7 @@ packages:
     source: hosted
     version: "4.0.0"
   http_status_code:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: http_status_code
       url: "https://pub.dartlang.org"

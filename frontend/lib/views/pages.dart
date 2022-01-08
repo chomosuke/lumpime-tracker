@@ -3,23 +3,32 @@ import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Page extends StatelessWidget {
+  final Widget topBar;
+  final Widget navBar;
   final Widget page;
-  const Page({required this.page, Key? key}) : super(key: key);
+  const Page({
+    required this.topBar,
+    required this.navBar,
+    required this.page,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const TopBar(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Material(
+      child: SizedBox(
+        child: Column(
           children: [
-            const NavBar(),
-            page,
+            topBar,
+            Row(
+              children: [
+                navBar,
+                page,
+              ],
+            ),
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 }
@@ -29,7 +38,11 @@ class QueryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    return Page(
+      topBar: const TopBar(search: true),
+      navBar: const NavBar(),
+      page: Text('placeholder'),
+    );
   }
 }
 
@@ -39,7 +52,11 @@ class FilmListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    return Page(
+      topBar: const TopBar(),
+      navBar: const NavBar(),
+      page: Text('placeholder'),
+    );
   }
 }
 
@@ -49,6 +66,10 @@ class FilmPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    return Page(
+      topBar: const TopBar(),
+      navBar: const NavBar(),
+      page: Text('placeholder'),
+    );
   }
 }

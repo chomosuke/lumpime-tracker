@@ -19,6 +19,7 @@ func main() {
 	port := flag.Int("p", 80, "port for the server")
 	dbConnection := flag.String("c", "mongodb://localhost:27017/film-list", "connection string for mongodb database")
 	auth.Secret = flag.String("s", "an insecure secret", "secret for authentication")
+	release := flag.Bool("r", false, "set to release mode")
 
 	flag.Parse()
 
@@ -26,6 +27,10 @@ func main() {
 	database, cleanup := db.InitDb(*dbConnection)
 	db.DBInst = database
 	defer cleanup()
+
+	if *release {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	// configurate and start the server.
 	r := gin.Default()
@@ -35,7 +40,9 @@ func main() {
 		panic(err)
 	}
 
-	r.Use(cors.Default())
+	if !*release {
+		r.Use(cors.Default())
+	}
 
 	endpoints := r.Group("/api")
 	{

@@ -6,6 +6,6 @@ class NavBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    return Material();
   }
 }
