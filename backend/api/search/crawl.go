@@ -24,13 +24,6 @@ func Crawl(c *gin.Context) {
 	}
 
 	err := db.DBInst.Films.Drop(context.TODO())
-	db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
-		{Keys: bson.M{"key_words": "text"}},
-		{Keys: bson.M{"status": 1}},
-		{Keys: bson.M{"genres": 1}},
-		{Keys: bson.M{"seasons": 1}},
-		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
-	})
 	if err != nil {
 		panic(err)
 	}
@@ -50,9 +43,17 @@ func crawl() {
 		}
 		res.Body.Close()
 	}
-	fmt.Printf("Last crawled id: %d\n", lastCrawledId)
+	fmt.Printf("Last crawled id: %d\n.", lastCrawledId)
 	crawlSeasons()
 	fmt.Println("Crawled.")
+	db.DBInst.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+		{Keys: bson.M{"key_words": "text"}},
+		{Keys: bson.M{"status": 1}},
+		{Keys: bson.M{"genres": 1}},
+		{Keys: bson.M{"seasons": 1}},
+		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
+	})
+	fmt.Println("Index created.")
 }
 
 func getPage(url string, statusNotExist int) *http.Response {
