@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/chomosuke/film-list/api/account"
 	"github.com/chomosuke/film-list/api/search"
@@ -41,7 +42,15 @@ func main() {
 	}
 
 	if !*release {
-		r.Use(cors.Default())
+		config := cors.DefaultConfig()
+		config.AllowAllOrigins = true
+		config.AddAllowHeaders(auth.AuthHeader)
+		r.Use(cors.New(config))
+
+		r.Use(func(c *gin.Context) {
+			time.Sleep(250 * time.Millisecond)
+			c.Next()
+		})
 	}
 
 	endpoints := r.Group("/api")

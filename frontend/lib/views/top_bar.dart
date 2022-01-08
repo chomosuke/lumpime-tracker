@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
+import 'forms/index.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -90,13 +91,13 @@ class AccountButton extends HookConsumerWidget {
         if (accountData == null) {
           return TextButton(
             onPressed: () {
-              // showDialog(
-              //   context: context,
-              //   builder: (context) => const SignInUp(),
-              // );
+              showDialog(
+                context: context,
+                builder: (context) => const SignInUp(),
+              );
             },
             child: const Text(
-              'Sign In / Sign Up',
+              'Log In / Sign Up',
               style: TextStyle(color: Colors.black),
             ),
           );
