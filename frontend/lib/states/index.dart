@@ -1,2 +1,2 @@
-export 'query_result.dart';
+export 'query.dart';
 export 'account.dart';

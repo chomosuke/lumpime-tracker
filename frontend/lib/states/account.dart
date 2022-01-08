@@ -1,6 +1,16 @@
 import 'package:frontend/http/index.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+final accountProvider = StateNotifierProvider<Account, Future<AccountData?>>(
+  (ref) {
+    return Account.get();
+  },
+);
+
+final accountDataProvider = FutureProvider<AccountData?>(
+  (ref) async => ref.watch(accountProvider),
+);
+
 // all futures sit within the ChangeNotifier, rest is just datastructure and helpers
 class Account extends StateNotifier<Future<AccountData?>> {
   Account.get()
