@@ -17,10 +17,16 @@ class MyPageRoute extends PageRouteBuilder {
             secondaryAnimation,
             child,
           ) {
-            final tween = Tween(begin: 0.0, end: 1.0);
+            final scaleTween = Tween(begin: 0.95, end: 1.0);
+            final fadeTween = Tween(begin: 0.0, end: 1.0);
             return FadeTransition(
-              opacity: animation.drive(tween),
-              child: Material(child: child),
+              opacity: animation.drive(fadeTween),
+              child: Material(
+                child: ScaleTransition(
+                  scale: animation.drive(scaleTween),
+                  child: child,
+                ),
+              ),
             );
           },
           transitionDuration: const Duration(milliseconds: 300),
