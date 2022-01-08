@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
+import 'package:frontend/views/app.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const listNameToIcon = <String, Icon>{
@@ -26,7 +27,7 @@ class NavBar extends HookConsumerWidget {
           IconButton(
             iconSize: 40,
             onPressed: () {
-              Navigator.of(context).pushNamed('/');
+              Navigator.of(navigatorKey.currentContext!).pushNamed('/');
             },
             icon: const Icon(Icons.search),
           ),
@@ -35,7 +36,8 @@ class NavBar extends HookConsumerWidget {
                 (listName) => IconButton(
                   iconSize: 40,
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/$listName');
+                    Navigator.of(navigatorKey.currentContext!)
+                        .pushNamed('/$listName');
                   },
                   icon: listNameToIcon[listName]!,
                 ),
