@@ -40,7 +40,13 @@ class TopBar extends HookConsumerWidget {
           const Spacer(flex: 6),
           SizedBox(
             width: 400,
-            child: search ? const Search() : null,
+            child: AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              firstChild: const Search(),
+              secondChild: const SizedBox(height: 48),
+              crossFadeState:
+                  search ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            ),
           ),
           const Spacer(flex: 1),
           Container(
