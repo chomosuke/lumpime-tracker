@@ -63,6 +63,14 @@ func Query(c *gin.Context) {
 					},
 				},
 			}},
+			bson.D{{
+				Key: "$project",
+				Value: bson.M{
+					"textScore": bson.M{"$meta": "textScore"},
+					"seasons":   "$seasons",
+					"genres":    "$genres",
+				},
+			}},
 		)
 	}
 
@@ -103,13 +111,20 @@ func Query(c *gin.Context) {
 			bson.D{{
 				Key: "$group",
 				Value: bson.M{
-					"_id":     bson.M{"_id": "$_id"},
-					"matches": bson.M{"$sum": 1},
+					"_id":       bson.M{"_id": "$_id"},
+					"matches":   bson.M{"$sum": 1},
+					"textScore": bson.M{"$first": "$textScore"},
+					"seasons":   bson.M{"$first": "$seasons"},
 				},
 			}},
 			bson.D{{
-				Key:   "$project",
-				Value: bson.M{"_id": "$_id._id", "matches": "$matches"},
+				Key: "$project",
+				Value: bson.M{
+					"_id":       "$_id._id",
+					"matches":   "$matches",
+					"textScore": "$textScore",
+					"seasons":   "$seasons",
+				},
 			}},
 		)
 	}
@@ -119,7 +134,7 @@ func Query(c *gin.Context) {
 		sortStage = append(sortStage, bson.E{Key: "matches", Value: -1})
 	}
 	if query != "" {
-		sortStage = append(sortStage, bson.E{Key: "score", Value: bson.M{"$meta": "textScore"}})
+		sortStage = append(sortStage, bson.E{Key: "textScore", Value: -1})
 	}
 	sortStage = append(sortStage, bson.E{Key: "seasons", Value: -1})
 

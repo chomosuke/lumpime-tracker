@@ -134,7 +134,7 @@ func crawlPage(res *http.Response) {
 			}
 			status = s.Parent().Contents().Get(2).Data
 			status = strings.TrimSpace(status)
-		} else if s.Text() == "Synonyms:" {
+		} else if s.Text() == "Synonyms:" || s.Text() == "English:" {
 			t := s.Parent().Contents().Get(2).Data
 			t = strings.TrimSpace(t)
 			names := strings.Split(t, ", ")
