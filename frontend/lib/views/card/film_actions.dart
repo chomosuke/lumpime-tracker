@@ -8,6 +8,10 @@ class FilmActions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final filmIdLists = ref.watch(filmIdListsProvider);
+    if (filmIdLists == null) {
+      return const CircularProgressIndicator();
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: listNames
@@ -40,7 +44,7 @@ class FilmListButton extends HookConsumerWidget {
 
     final filmIdLists = ref.watch(filmIdListsProvider);
     if (filmIdLists == null) {
-      return const CircularProgressIndicator();
+      return Container();
     }
 
     final filmIdList = filmIdLists[listName]!;
