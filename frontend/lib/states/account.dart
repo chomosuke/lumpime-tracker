@@ -49,7 +49,7 @@ class Account extends StateNotifier<Future<AccountData?>> {
     })();
   }
 
-  void patch(String? username, String? password) {
+  void patch({String? username, String? password}) {
     state = (() async {
       final success = await http.accountPatch(username, password);
       if (!success) {

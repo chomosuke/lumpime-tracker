@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/helpers/warning_dialog.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
+import 'package:frontend/views/forms/change_password.dart';
+import 'package:frontend/views/forms/change_username.dart';
 import 'forms/index.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -142,6 +144,18 @@ class Actions extends HookConsumerWidget {
                         ),
                       );
                       break;
+                    case 'changeUsername':
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ChangeUsername(),
+                      );
+                      break;
+                    case 'changePassword':
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ChangePassword(),
+                      );
+                      break;
                     default:
                       throw Error();
                   }
@@ -150,7 +164,15 @@ class Actions extends HookConsumerWidget {
                   const PopupMenuItem(
                     child: Text('Log Out'),
                     value: 'logout',
-                  )
+                  ),
+                  const PopupMenuItem(
+                    child: Text('Change username'),
+                    value: 'changeUsername',
+                  ),
+                  const PopupMenuItem(
+                    child: Text('Change password'),
+                    value: 'changePassword',
+                  ),
                 ],
               ),
             ],
