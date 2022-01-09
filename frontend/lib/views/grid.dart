@@ -24,11 +24,11 @@ class Grid extends HookConsumerWidget {
     const maxCrossAxisExtent = 182 * 2.0;
     return Center(
       child: SizedBox(
-        width: maxCrossAxisExtent * 5,
+        width: 1600,
         child: GridView.extent(
           padding: const EdgeInsets.all(30),
           maxCrossAxisExtent: maxCrossAxisExtent,
-          childAspectRatio: 8 / 10,
+          childAspectRatio: 400 / 600,
           crossAxisSpacing: 30,
           mainAxisSpacing: 30,
           shrinkWrap: true,

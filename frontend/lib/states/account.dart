@@ -64,28 +64,31 @@ class Account extends StateNotifier<Future<AccountData?>> {
 
   void addToFilmList(String listName, String filmId) {
     state = (() async {
-      final filmIdLists = (await state)!.filmIdLists;
+      final accountData = (await state)!;
+      final filmIdLists = accountData.filmIdLists;
       filmIdLists._lists[listName]!._add(filmId);
-      await filmIdLists._put();
-      return AccountData((await state)!.username, filmIdLists);
+      filmIdLists._put();
+      return AccountData(accountData.username, filmIdLists);
     })();
   }
 
   void removeFromFilmList(String listName, String filmId) {
     state = (() async {
-      final filmIdLists = (await state)!.filmIdLists;
+      final accountData = (await state)!;
+      final filmIdLists = accountData.filmIdLists;
       filmIdLists._lists[listName]!._remove(filmId);
-      await filmIdLists._put();
-      return AccountData((await state)!.username, filmIdLists);
+      filmIdLists._put();
+      return AccountData(accountData.username, filmIdLists);
     })();
   }
 
   void removeFromFilmListAt(String listName, int index) {
     state = (() async {
-      final filmIdLists = (await state)!.filmIdLists;
+      final accountData = (await state)!;
+      final filmIdLists = accountData.filmIdLists;
       filmIdLists._lists[listName]!._removeAt(index);
-      await filmIdLists._put();
-      return AccountData((await state)!.username, filmIdLists);
+      filmIdLists._put();
+      return AccountData(accountData.username, filmIdLists);
     })();
   }
 }
@@ -98,8 +101,8 @@ class AccountData {
 
 const listNames = [
   toWatch,
-  watched,
   watching,
+  watched,
   liked,
   saved,
 ];

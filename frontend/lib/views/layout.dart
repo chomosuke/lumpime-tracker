@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Layout extends StatelessWidget {
+class Layout extends HookConsumerWidget {
   final Widget topBar;
   final Widget navBar;
   final Widget page;
@@ -12,7 +13,7 @@ class Layout extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       child: Column(
         children: [

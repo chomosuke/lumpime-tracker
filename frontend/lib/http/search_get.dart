@@ -32,18 +32,56 @@ class Film {
   final String imgUrl;
   final int episodes;
   final List<int> seasons;
+  final List<String> seasonsName;
+  final String firstSeason;
   final List<String> genres;
   final String status;
-  Film.fromMap(Map<String, dynamic> map)
-      : url = map['url'],
-        name = map['name'],
-        altNames = List.from(map['alt_names']),
-        englishName = map['english'],
-        imgUrl = map['img_url'],
-        episodes = map['episodes'],
-        seasons = List.from(map['seasons']),
-        genres = List.from(map['genres']),
-        status = map['status'];
+  Film._(
+    this.url,
+    this.name,
+    this.altNames,
+    this.englishName,
+    this.imgUrl,
+    this.episodes,
+    this.seasons,
+    this.seasonsName,
+    this.firstSeason,
+    this.genres,
+    this.status,
+  );
+
+  factory Film.fromMap(Map<String, dynamic> map) {
+    final seasons = List<int>.from(map['seasons']);
+    final seasonsName = seasons.map<String>((s) => intToSeason(s)).toList();
+    return Film._(
+      map['url'],
+      map['name'],
+      List.from(map['alt_names']),
+      'english', //map['english'],
+      map['img_url'],
+      map['episodes'],
+      seasons,
+      seasonsName,
+      seasonsName.last,
+      List.from(map['genres']),
+      map['status'],
+    );
+  }
+}
+
+const zeroYear = 1917;
+
+var seasonMap = [
+  'Winter',
+  'Spring',
+  'Summer',
+  'Fall',
+];
+
+String intToSeason(int i) {
+  final year = i / 4 + zeroYear;
+  final season = seasonMap[i % 4];
+  return '$season $year';
 }
 
 final _filmCache = <String, Film>{};

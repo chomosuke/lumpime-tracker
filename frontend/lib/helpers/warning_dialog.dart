@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class WarningDialog extends StatelessWidget {
+class WarningDialog extends HookConsumerWidget {
   final String title;
   final String description;
   final VoidCallback onConfirm;
@@ -12,7 +13,7 @@ class WarningDialog extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
