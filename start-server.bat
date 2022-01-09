@@ -1,2 +1,2 @@
 cd backend
-go run main.go
+go run main.go %*

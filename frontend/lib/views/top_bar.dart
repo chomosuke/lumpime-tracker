@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/helpers/warning_dialog.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
 import 'forms/index.dart';
@@ -52,7 +53,7 @@ class TopBar extends HookConsumerWidget {
           Container(
             alignment: Alignment.centerRight,
             width: 150,
-            child: const AccountButton(),
+            child: const Actions(),
           )
         ],
       ),
@@ -90,8 +91,8 @@ class Search extends HookConsumerWidget {
   }
 }
 
-class AccountButton extends HookConsumerWidget {
-  const AccountButton({Key? key}) : super(key: key);
+class Actions extends HookConsumerWidget {
+  const Actions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,7 +116,45 @@ class AccountButton extends HookConsumerWidget {
             ),
           );
         } else {
-          return Text('Hi ${accountData.username}');
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  'Hi ${accountData.username}',
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+              PopupMenuButton(
+                onSelected: (value) {
+                  switch (value) {
+                    case 'logout':
+                      showDialog(
+                        context: context,
+                        builder: (context) => WarningDialog(
+                          title: 'Log Out',
+                          description: 'Are you sure?',
+                          onConfirm: () {
+                            ref.read(accountProvider.notifier).logout();
+                          },
+                        ),
+                      );
+                      break;
+                    default:
+                      throw Error();
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    child: Text('Log Out'),
+                    value: 'logout',
+                  )
+                ],
+              ),
+            ],
+          );
         }
       },
     );
