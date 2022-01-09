@@ -8,6 +8,21 @@ class FilmDetails extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const smallTextStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.black54,
+    );
+
+    const titleTextStyle = TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Color.fromARGB(180, 0, 0, 0),
+    );
+
+    final episodes = data.episodes == 0 ? '?' : data.episodes;
+    final firstSeason = data.firstSeason == '' ? '?' : data.firstSeason;
+
     // status, first season, episodes,
     return SizedBox(
       height: 128,
@@ -18,27 +33,25 @@ class FilmDetails extends HookConsumerWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(180, 0, 0, 0),
-            ),
+            style: titleTextStyle,
           ), // 40
           Text(
             data.englishName,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
-            ),
+            style: smallTextStyle,
           ), // 72
           const Spacer(),
-          Row(
-            children: [],
-          ),
+          Text(
+            '$firstSeason | ${data.status} | $episodes eps',
+            style: smallTextStyle,
+          ), // 88
+          const SizedBox(height: 5),
+          Text(
+            data.genres.join(' '),
+            style: smallTextStyle,
+          ), // 105
         ],
       ),
     );

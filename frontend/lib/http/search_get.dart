@@ -62,7 +62,7 @@ class Film {
       map['episodes'],
       seasons,
       seasonsName,
-      seasonsName.isEmpty ? '' : seasonsName.last,
+      seasonsName.isEmpty ? '' : seasonsName[0],
       List.from(map['genres']),
       map['status'],
     );
@@ -79,7 +79,7 @@ var seasonMap = [
 ];
 
 String intToSeason(int i) {
-  final year = i / 4 + zeroYear;
+  final year = (i / 4 + zeroYear).floor();
   final season = seasonMap[i % 4];
   return '$season $year';
 }
