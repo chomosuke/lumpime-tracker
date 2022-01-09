@@ -40,7 +40,7 @@ class FilmListButton extends HookConsumerWidget {
 
     final filmIdLists = ref.watch(filmIdListsProvider);
     if (filmIdLists == null) {
-      return Container();
+      return const CircularProgressIndicator();
     }
 
     final filmIdList = filmIdLists[listName]!;

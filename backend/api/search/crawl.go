@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/chomosuke/film-list/auth"
-	"github.com/chomosuke/film-list/db"
+	"github.com/chomosuke/backend/auth"
+	"github.com/chomosuke/backend/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

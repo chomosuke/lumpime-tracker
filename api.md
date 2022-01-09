@@ -49,7 +49,7 @@ response: {
 }
 ```
 
-## GET `/query/?query&seasons&genres&start&limit`
+## GET `/query/?query&seasons&genres&start&limit&nsfw`
 // seasons & genres will be seperated by ,
 ```
 request: none

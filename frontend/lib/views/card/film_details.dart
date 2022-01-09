@@ -34,24 +34,24 @@ class FilmDetails extends HookConsumerWidget {
             maxLines: 2,
             textAlign: TextAlign.center,
             style: titleTextStyle,
-          ), // 40
+          ),
           Text(
             data.englishName,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.center,
             style: smallTextStyle,
-          ), // 72
+          ),
           const Spacer(),
           Text(
             '$firstSeason | ${data.status} | $episodes eps',
             style: smallTextStyle,
-          ), // 88
+          ),
           const SizedBox(height: 5),
           Text(
             data.genres.join(' '),
             style: smallTextStyle,
-          ), // 105
+          ),
         ],
       ),
     );

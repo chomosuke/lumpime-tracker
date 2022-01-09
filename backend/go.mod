@@ -1,4 +1,4 @@
-module github.com/chomosuke/film-list
+module github.com/chomosuke/backend
 
 go 1.17
 

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chomosuke/film-list/db"
+	"github.com/chomosuke/backend/db"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson"

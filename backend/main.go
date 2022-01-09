@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chomosuke/film-list/api/account"
-	"github.com/chomosuke/film-list/api/search"
-	"github.com/chomosuke/film-list/api/userdata"
-	"github.com/chomosuke/film-list/auth"
-	"github.com/chomosuke/film-list/db"
+	"github.com/chomosuke/backend/api/account"
+	"github.com/chomosuke/backend/api/search"
+	"github.com/chomosuke/backend/api/userdata"
+	"github.com/chomosuke/backend/auth"
+	"github.com/chomosuke/backend/db"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -17,6 +17,7 @@ import (
 
 func main() {
 	// parse cmd args first
+	address := flag.String("a", "127.0.0.1", "address for the server")
 	port := flag.Int("p", 80, "port for the server")
 	dbConnection := flag.String("c", "mongodb://localhost:27017/film-list", "connection string for mongodb database")
 	auth.Secret = flag.String("s", "an insecure secret", "secret for authentication")
@@ -81,5 +82,5 @@ func main() {
 
 	r.Use(static.Serve("/", static.LocalFile("../web_build", true)))
 
-	r.Run(fmt.Sprintf(":%d", *port))
+	r.Run(fmt.Sprintf("%s:%d", *address, *port))
 }
