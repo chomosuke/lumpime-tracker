@@ -11,7 +11,7 @@ final queryResultProvider = FutureProvider<QueryResult>((ref) async {
   return QueryResult.get(query, queryRange);
 });
 
-const initQueryRange = QueryRange(0, 50);
+const initQueryRange = QueryRange(0, 36);
 final queryRangeProvider = StateProvider(
   (ref) => initQueryRange,
 );

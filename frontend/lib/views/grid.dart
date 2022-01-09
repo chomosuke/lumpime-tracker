@@ -24,34 +24,28 @@ class Grid extends HookConsumerWidget {
       );
     }
 
-    final controller = useScrollController();
-
     const maxCrossAxisExtent = 182 * 2.0;
     return Scrollbar(
-      controller: controller,
       isAlwaysShown: true,
-      child: SingleChildScrollView(
-        controller: controller,
-        child: Center(
-          child: SizedBox(
-            width: 1600,
-            child: GridView.extent(
-              padding: const EdgeInsets.all(30)
-                  .add(padding ?? const EdgeInsets.all(0)),
-              maxCrossAxisExtent: maxCrossAxisExtent,
-              childAspectRatio: 400 / 600,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 30,
-              shrinkWrap: true,
-              children: filmIds
-                  .map<Widget>(
-                    (filmId) => Card(
-                      filmId: filmId,
-                      showEpisodeTracker: showEpisodeTracker,
-                    ),
-                  )
-                  .toList(),
-            ),
+      child: Center(
+        child: SizedBox(
+          width: 1600,
+          child: GridView.extent(
+            padding: const EdgeInsets.all(30)
+                .add(padding ?? const EdgeInsets.all(0)),
+            maxCrossAxisExtent: maxCrossAxisExtent,
+            childAspectRatio: 400 / 600,
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 30,
+            shrinkWrap: true,
+            children: filmIds
+                .map<Widget>(
+                  (filmId) => Card(
+                    filmId: filmId,
+                    showEpisodeTracker: showEpisodeTracker,
+                  ),
+                )
+                .toList(),
           ),
         ),
       ),

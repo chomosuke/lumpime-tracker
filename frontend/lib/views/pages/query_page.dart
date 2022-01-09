@@ -64,7 +64,10 @@ class QueryPage extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  Text('   $pageIndex   '),
+                  AnimatedSwitcher(
+                    child: Text('   $pageIndex   ', key: ValueKey(pageIndex)),
+                    duration: const Duration(milliseconds: 300),
+                  ),
                   SizedBox(
                     width: 85,
                     child: OutlinedButton(
