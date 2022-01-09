@@ -29,25 +29,23 @@ class Grid extends HookConsumerWidget {
       isAlwaysShown: true,
       child: Center(
         child: SizedBox(
-          width: 1600,
-          child: GridView.extent(
-            padding: const EdgeInsets.all(30)
-                .add(padding ?? const EdgeInsets.all(0)),
-            maxCrossAxisExtent: maxCrossAxisExtent,
-            childAspectRatio: 400 / 600,
-            crossAxisSpacing: 30,
-            mainAxisSpacing: 30,
-            shrinkWrap: true,
-            children: filmIds
-                .map<Widget>(
-                  (filmId) => Card(
-                    filmId: filmId,
-                    showEpisodeTracker: showEpisodeTracker,
-                  ),
-                )
-                .toList(),
-          ),
-        ),
+            width: 1600,
+            child: GridView.builder(
+              itemCount: filmIds.length,
+              padding: const EdgeInsets.all(30)
+                  .add(padding ?? const EdgeInsets.all(0)),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: maxCrossAxisExtent,
+                childAspectRatio: 400 / 600,
+                crossAxisSpacing: 30,
+                mainAxisSpacing: 30,
+              ),
+              shrinkWrap: true,
+              itemBuilder: (context, index) => Card(
+                filmId: filmIds[index],
+                showEpisodeTracker: showEpisodeTracker,
+              ),
+            )),
       ),
     );
   }
