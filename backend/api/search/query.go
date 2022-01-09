@@ -58,22 +58,6 @@ func Query(c *gin.Context) {
 
 	pipline := mongo.Pipeline{}
 
-	if !nsfw {
-		pipline = append(
-			pipline,
-			bson.D{{
-				Key: "$match",
-				Value: bson.M{
-					"genres": bson.M{
-						"$not": bson.M{
-							"$in": []string{"Hentai", "Ecchi", "Erotica"},
-						},
-					},
-				},
-			}},
-		)
-	}
-
 	if query != "" {
 		pipline = append(
 			pipline,
@@ -91,6 +75,22 @@ func Query(c *gin.Context) {
 					"textScore": bson.M{"$meta": "textScore"},
 					"seasons":   "$seasons",
 					"genres":    "$genres",
+				},
+			}},
+		)
+	}
+
+	if !nsfw {
+		pipline = append(
+			pipline,
+			bson.D{{
+				Key: "$match",
+				Value: bson.M{
+					"genres": bson.M{
+						"$not": bson.M{
+							"$in": []string{"Hentai", "Ecchi", "Erotica"},
+						},
+					},
 				},
 			}},
 		)

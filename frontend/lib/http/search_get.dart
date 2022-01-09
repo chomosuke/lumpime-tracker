@@ -62,7 +62,7 @@ class Film {
       map['episodes'],
       seasons,
       seasonsName,
-      seasonsName.last,
+      seasonsName.isEmpty ? '' : seasonsName.last,
       List.from(map['genres']),
       map['status'],
     );
