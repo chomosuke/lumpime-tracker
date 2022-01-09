@@ -102,7 +102,7 @@ class Actions extends HookConsumerWidget {
 
     return username.when(
       loading: () => const LinearProgressIndicator(),
-      error: (err, stack) => Text('Error: $err'),
+      error: (err, stack) => Text('Error: $stack'),
       data: (username) {
         if (username == null) {
           return TextButton(

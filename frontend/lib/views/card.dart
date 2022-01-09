@@ -18,7 +18,7 @@ class Card extends HookConsumerWidget {
     final film = useFuture(filmFuture);
 
     if (film.hasError) {
-      return Text('Error ${film.error}');
+      return Text('Error: ${film.stackTrace}');
     }
     if (film.hasData) {
       final filmData = film.data!;
@@ -37,7 +37,11 @@ class Card extends HookConsumerWidget {
               children: [
                 FilmDetails(filmData),
                 FilmImage(imgUrl: filmData.imgUrl),
-                FilmActions(filmId: filmId),
+                Expanded(
+                  child: Center(
+                    child: FilmActions(filmId: filmId),
+                  ),
+                ),
               ],
             ),
           ),

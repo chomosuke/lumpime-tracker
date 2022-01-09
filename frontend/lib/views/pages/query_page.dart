@@ -17,7 +17,7 @@ class QueryPage extends HookConsumerWidget {
           child: LinearProgressIndicator(),
         ),
       ),
-      error: (error, stackTrace) => Text('Error: $error'),
+      error: (error, stackTrace) => Text('Error: $stackTrace'),
       data: (queryResult) => Grid(
         queryResult.filmIds,
         emptyMessage: 'No anime found',

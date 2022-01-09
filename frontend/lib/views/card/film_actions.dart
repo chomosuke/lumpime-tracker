@@ -2,54 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class IconSwitch {
-  final Icon filled;
-  final Icon unfilled;
-
-  const IconSwitch(this.filled, this.unfilled);
-  Icon get(bool filled) => filled ? this.filled : unfilled;
-}
-
-const iconSize = 24;
-
-const listNameToIcons = <String, IconSwitch>{
-  toWatch: IconSwitch(
-    Icon(Icons.watch_later),
-    Icon(
-      Icons.watch_later_outlined,
-      color: Colors.black38,
-    ),
-  ),
-  watching: IconSwitch(
-    Icon(Icons.remove_red_eye),
-    Icon(
-      Icons.remove_red_eye_outlined,
-      color: Colors.black38,
-    ),
-  ),
-  watched: IconSwitch(
-    Icon(Icons.done),
-    Icon(
-      Icons.done,
-      color: Colors.black38,
-    ),
-  ),
-  liked: IconSwitch(
-    Icon(Icons.thumb_up_alt),
-    Icon(
-      Icons.thumb_up_alt_outlined,
-      color: Colors.black38,
-    ),
-  ),
-  saved: IconSwitch(
-    Icon(Icons.bookmark),
-    Icon(
-      Icons.bookmark_outline,
-      color: Colors.black38,
-    ),
-  ),
-};
-
 class FilmActions extends HookConsumerWidget {
   final String filmId;
   const FilmActions({required this.filmId, Key? key}) : super(key: key);
@@ -57,6 +9,7 @@ class FilmActions extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: listNames
           .map<Widget>((listName) => FilmListButton(
                 listName: listName,
@@ -119,3 +72,71 @@ class FilmListButton extends HookConsumerWidget {
     );
   }
 }
+
+class IconSwitch {
+  final Icon filled;
+  final Icon unfilled;
+
+  const IconSwitch(this.filled, this.unfilled);
+  Icon get(bool filled) => filled ? this.filled : unfilled;
+}
+
+const iconSize = 36.0;
+
+const listNameToIcons = <String, IconSwitch>{
+  toWatch: IconSwitch(
+    Icon(
+      Icons.watch_later,
+      size: iconSize,
+    ),
+    Icon(
+      Icons.watch_later_outlined,
+      color: Colors.black38,
+      size: iconSize,
+    ),
+  ),
+  watching: IconSwitch(
+    Icon(
+      Icons.remove_red_eye,
+      size: iconSize,
+    ),
+    Icon(
+      Icons.remove_red_eye_outlined,
+      color: Colors.black38,
+      size: iconSize,
+    ),
+  ),
+  watched: IconSwitch(
+    Icon(
+      Icons.done,
+      size: iconSize,
+    ),
+    Icon(
+      Icons.done,
+      color: Colors.black38,
+      size: iconSize,
+    ),
+  ),
+  liked: IconSwitch(
+    Icon(
+      Icons.thumb_up_alt,
+      size: iconSize,
+    ),
+    Icon(
+      Icons.thumb_up_alt_outlined,
+      color: Colors.black38,
+      size: iconSize,
+    ),
+  ),
+  saved: IconSwitch(
+    Icon(
+      Icons.bookmark,
+      size: iconSize,
+    ),
+    Icon(
+      Icons.bookmark_outline,
+      color: Colors.black38,
+      size: iconSize,
+    ),
+  ),
+};
