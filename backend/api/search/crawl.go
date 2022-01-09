@@ -109,6 +109,7 @@ func crawlPage(res *http.Response) {
 	})
 
 	altNames := []string{}
+	var english string
 	var episodes int
 	genres := []string{}
 	var status string
@@ -134,11 +135,17 @@ func crawlPage(res *http.Response) {
 			}
 			status = s.Parent().Contents().Get(2).Data
 			status = strings.TrimSpace(status)
-		} else if s.Text() == "Synonyms:" || s.Text() == "English:" {
+		} else if s.Text() == "Synonyms:" {
 			t := s.Parent().Contents().Get(2).Data
 			t = strings.TrimSpace(t)
 			names := strings.Split(t, ", ")
 			altNames = append(altNames, names...)
+		} else if s.Text() == "English:" {
+			if english != "" {
+				fmt.Printf("multiple English field?\n url: %s\n", res.Request.URL.String())
+			}
+			english = s.Parent().Contents().Get(2).Data
+			english = strings.TrimSpace(english)
 		}
 	})
 
@@ -158,6 +165,7 @@ func crawlPage(res *http.Response) {
 	var keyWords strings.Builder
 
 	keyWords.WriteString(name)
+	keyWords.WriteString(" " + english)
 	for _, altName := range altNames {
 		keyWords.WriteString(" " + altName)
 	}
@@ -166,6 +174,7 @@ func crawlPage(res *http.Response) {
 		Url:      res.Request.URL.String(),
 		Name:     name,
 		AltNames: altNames,
+		English:  english,
 		KeyWords: keyWords.String(),
 		ImgUrl:   imgUrl,
 		Episodes: episodes,

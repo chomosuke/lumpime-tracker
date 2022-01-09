@@ -27,6 +27,7 @@ func Film(c *gin.Context) {
 		"url":       film.Url,
 		"name":      film.Name,
 		"alt_names": film.AltNames,
+		"english":   film.English,
 		"img_url":   film.ImgUrl,
 		"episodes":  film.Episodes,
 		"seasons":   film.Seasons,

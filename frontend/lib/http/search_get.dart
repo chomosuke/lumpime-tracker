@@ -28,6 +28,7 @@ class Film {
   final String url;
   final String name;
   final List<String> altNames;
+  final String englishName;
   final String imgUrl;
   final int episodes;
   final List<int> seasons;
@@ -37,6 +38,7 @@ class Film {
       : url = map['url'],
         name = map['name'],
         altNames = List.from(map['alt_names']),
+        englishName = map['english'],
         imgUrl = map['img_url'],
         episodes = map['episodes'],
         seasons = List.from(map['seasons']),

@@ -63,6 +63,7 @@ response: {
     url: String
     name: String
     alt_names: [String]
+    english: String
     img_url: String
     episodes: int
     seasons: [int]

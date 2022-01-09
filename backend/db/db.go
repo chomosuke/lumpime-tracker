@@ -79,6 +79,7 @@ type Film struct {
 	Url      string              `bson:"url"`
 	Name     string              `bson:"name"`
 	AltNames []string            `bson:"alt_names"`
+	English  string              `bson:"english"`
 	KeyWords string              `bson:"key_words"`
 	ImgUrl   string              `bson:"img_url"`
 	Episodes int                 `bson:"episodes"`
