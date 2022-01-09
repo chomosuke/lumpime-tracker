@@ -2,33 +2,44 @@ import 'package:frontend/http/index.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final queryProvider = StateProvider<Query>(
-  (ref) => Query('', [], [], 0, 50),
+  (ref) => Query('', [], []),
 );
 
-final queryResultProvider = FutureProvider<QueryResult>(
-  (ref) async => QueryResult.get(ref.watch(queryProvider)),
+final queryResultProvider = FutureProvider<QueryResult>((ref) async {
+  final query = ref.watch(queryProvider);
+  final queryRange = ref.watch(queryRangeProvider);
+  return QueryResult.get(query, queryRange);
+});
+
+const initQueryRange = QueryRange(0, 50);
+final queryRangeProvider = StateProvider(
+  (ref) => initQueryRange,
 );
+
+class QueryRange {
+  final int start;
+  final int limit;
+  const QueryRange(this.start, this.limit);
+}
 
 class Query {
   final String text;
   final List<int> seasons;
   final List<String> genres;
-  final int start;
-  final int limit;
 
-  Query(this.text, this.seasons, this.genres, this.start, this.limit);
+  Query(this.text, this.seasons, this.genres);
 }
 
 class QueryResult {
   final List<String> filmIds;
   QueryResult._(this.filmIds);
-  static Future<QueryResult> get(Query query) async {
+  static Future<QueryResult> get(Query query, QueryRange queryRange) async {
     return QueryResult._(await http.query(
       query.text,
       query.seasons,
       query.genres,
-      query.start,
-      query.limit,
+      queryRange.start,
+      queryRange.limit,
     ));
   }
 }

@@ -74,9 +74,8 @@ class Search extends HookConsumerWidget {
         controller.text,
         [],
         [],
-        0,
-        50,
       );
+      ref.read(queryRangeProvider.state).state = initQueryRange;
     }
 
     return TextField(

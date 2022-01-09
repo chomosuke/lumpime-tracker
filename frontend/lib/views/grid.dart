@@ -7,10 +7,12 @@ class Grid extends HookConsumerWidget {
   final List<String> filmIds;
   final bool showEpisodeTracker;
   final String emptyMessage;
+  final EdgeInsetsGeometry? padding;
   const Grid(
     this.filmIds, {
     this.showEpisodeTracker = false,
     this.emptyMessage = '',
+    this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -34,7 +36,8 @@ class Grid extends HookConsumerWidget {
           child: SizedBox(
             width: 1600,
             child: GridView.extent(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(30)
+                  .add(padding ?? const EdgeInsets.all(0)),
               maxCrossAxisExtent: maxCrossAxisExtent,
               childAspectRatio: 400 / 600,
               crossAxisSpacing: 30,
