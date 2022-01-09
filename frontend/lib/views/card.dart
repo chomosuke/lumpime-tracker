@@ -153,8 +153,6 @@ class FilmActions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final account = ref.watch(accountProvider.notifier);
-
     return Row(
       children: listNames
           .map<Widget>((listName) => FilmListButton(
@@ -179,29 +177,31 @@ class FilmListButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final icons = listNameToIcons[listName]!;
 
-    final account = ref.watch(accountProvider.notifier);
-
-    final accountData = ref.watch(accountDataProvider).value;
-
-    if (accountData == null) {
+    final username = ref.watch(usernameProvider).value;
+    if (username == null) {
       return Container();
     }
 
-    final filmIdList = accountData.filmIdLists[listName]!;
+    final filmIdLists = ref.watch(filmIdListsProvider);
+    if (filmIdLists == null) {
+      return Container();
+    }
+
+    final filmIdList = filmIdLists[listName]!;
 
     return InkWell(
       onTap: () {
         final watchLists = [toWatch, watching, watched];
         if (!filmIdList.contains(filmId) && watchLists.contains(listName)) {
           for (final watchListName in watchLists) {
-            account.removeFromFilmList(watchListName, filmId);
+            filmIdLists[watchListName]!.remove(filmId);
           }
-          account.addToFilmList(listName, filmId);
+          filmIdList.add(filmId);
         } else {
           if (filmIdList.contains(filmId)) {
-            account.removeFromFilmList(listName, filmId);
+            filmIdList.remove(filmId);
           } else {
-            account.addToFilmList(listName, filmId);
+            filmIdList.add(filmId);
           }
         }
       },

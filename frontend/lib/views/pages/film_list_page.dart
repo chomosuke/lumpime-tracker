@@ -9,25 +9,26 @@ class FilmListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountData = ref.watch(accountDataProvider);
+    final filmIdLists = ref.watch(filmIdListsProvider);
+    final username = ref.watch(usernameProvider).value;
 
-    return accountData.when(
-      loading: () => const Center(
-        child: SizedBox(
-          width: 500,
-          child: LinearProgressIndicator(),
-        ),
-      ),
-      error: (error, stackTrace) => Text('Error: $error'),
-      data: (accountData) => accountData == null
-          ? const Center(
-              child: Text('Log In to save anime to a list'),
-            )
-          : Grid(
-              accountData.filmIdLists[listName]!.list,
-              showEpisodeTracker: listName == watching,
-              emptyMessage: 'You don\'t have any anime in this list',
+    if (username == null) {
+      return const Center(
+        child: Text('Log In to save anime to a list'),
+      );
+    }
+
+    return filmIdLists == null
+        ? const Center(
+            child: SizedBox(
+              width: 500,
+              child: LinearProgressIndicator(),
             ),
-    );
+          )
+        : Grid(
+            filmIdLists[listName]!.list,
+            showEpisodeTracker: listName == watching,
+            emptyMessage: 'You don\'t have any anime in this list',
+          );
   }
 }

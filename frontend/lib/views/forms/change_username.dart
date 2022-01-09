@@ -8,17 +8,17 @@ class ChangeUsername extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountData = ref.watch(accountDataProvider);
+    final username = ref.watch(usernameProvider);
 
     // if username changed, this means successfully changed the username
-    useValueChanged<String?, void>(accountData.value?.username, (oldValue, _) {
+    useValueChanged<String?, void>(username.value, (oldValue, _) {
       if (oldValue != null) {
         // username changed
         Navigator.of(context).pop();
       }
     });
 
-    final processing = accountData.asData == null;
+    final processing = username.asData == null;
     final attempted = useState(false);
 
     String? usernameError;

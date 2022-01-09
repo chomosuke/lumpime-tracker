@@ -98,13 +98,13 @@ class Actions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountData = ref.watch(accountDataProvider);
+    final username = ref.watch(usernameProvider);
 
-    return accountData.when(
+    return username.when(
       loading: () => const LinearProgressIndicator(),
       error: (err, stack) => Text('Error: $err'),
-      data: (accountData) {
-        if (accountData == null) {
+      data: (username) {
+        if (username == null) {
           return TextButton(
             onPressed: () {
               showDialog(
@@ -124,7 +124,7 @@ class Actions extends HookConsumerWidget {
             children: [
               Flexible(
                 child: Text(
-                  'Hi ${accountData.username}',
+                  'Hi $username',
                   softWrap: false,
                   overflow: TextOverflow.fade,
                 ),

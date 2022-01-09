@@ -8,8 +8,8 @@ class SignInUp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountData = ref.watch(accountDataProvider);
-    final processing = accountData.asData == null;
+    final username = ref.watch(usernameProvider);
+    final processing = username.asData == null;
     final logIn = useState(true);
     final attempted = useState(false);
     final usernameController = useTextEditingController();
@@ -21,7 +21,7 @@ class SignInUp extends HookConsumerWidget {
     String? passwordRepeatError;
 
     if (!processing) {
-      if (accountData.value != null) {
+      if (username.value != null) {
         // logged in already, pop the dialog
         Navigator.of(context).pop();
       } else {
