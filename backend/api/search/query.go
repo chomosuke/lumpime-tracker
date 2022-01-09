@@ -50,7 +50,29 @@ func Query(c *gin.Context) {
 		return
 	}
 
+	nsfw, err := strconv.ParseBool(c.DefaultQuery("nsfw", "false"))
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
 	pipline := mongo.Pipeline{}
+
+	if !nsfw {
+		pipline = append(
+			pipline,
+			bson.D{{
+				Key: "$match",
+				Value: bson.M{
+					"genres": bson.M{
+						"$not": bson.M{
+							"$in": []string{"Hentai", "Ecchi", "Erotica"},
+						},
+					},
+				},
+			}},
+		)
+	}
 
 	if query != "" {
 		pipline = append(
