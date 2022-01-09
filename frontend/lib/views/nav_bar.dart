@@ -12,6 +12,14 @@ const listNameToIcon = <String, Icon>{
   saved: Icon(Icons.bookmark),
 };
 
+const listNameToToolTip = <String, String>{
+  toWatch: 'Watchlist',
+  watching: 'Watching',
+  watched: 'Completed',
+  liked: 'Liked',
+  saved: 'Bookmarked',
+};
+
 class NavBar extends HookConsumerWidget {
   const NavBar({Key? key}) : super(key: key);
 
@@ -34,6 +42,7 @@ class NavBar extends HookConsumerWidget {
             },
             icon: const Icon(Icons.search),
             color: selected.value == '/' ? null : Colors.black54,
+            tooltip: 'Search',
           ),
           ...listNames
               .map<Widget>(
@@ -46,6 +55,7 @@ class NavBar extends HookConsumerWidget {
                   },
                   icon: listNameToIcon[listName]!,
                   color: selected.value == listName ? null : Colors.black54,
+                  tooltip: listNameToToolTip[listName],
                 ),
               )
               .toList(),
