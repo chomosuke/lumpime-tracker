@@ -4,6 +4,7 @@ import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
 import 'package:frontend/views/forms/change_password.dart';
 import 'package:frontend/views/forms/change_username.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'forms/index.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -38,7 +39,7 @@ class TopBar extends HookConsumerWidget {
           const SizedBox(width: 20),
           Text(
             appName,
-            style: Theme.of(context).textTheme.headline4,
+            style: GoogleFonts.nunito(fontSize: 34, color: Colors.black54),
           ),
           const Spacer(flex: 6),
           SizedBox(
