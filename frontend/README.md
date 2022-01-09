@@ -1,6 +1,6 @@
 # frontend
 
-A new Flutter project.
+A website to track all your animes.
 
 ## Getting Started
 

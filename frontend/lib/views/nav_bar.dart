@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/states/index.dart';
 import 'package:frontend/views/app.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +17,7 @@ class NavBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selected = useState('/');
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -28,8 +30,10 @@ class NavBar extends HookConsumerWidget {
             iconSize: 40,
             onPressed: () {
               Navigator.of(navigatorKey.currentContext!).pushNamed('/');
+              selected.value = '/';
             },
             icon: const Icon(Icons.search),
+            color: selected.value == '/' ? null : Colors.black54,
           ),
           ...listNames
               .map<Widget>(
@@ -38,8 +42,10 @@ class NavBar extends HookConsumerWidget {
                   onPressed: () {
                     Navigator.of(navigatorKey.currentContext!)
                         .pushNamed('/$listName');
+                    selected.value = listName;
                   },
                   icon: listNameToIcon[listName]!,
+                  color: selected.value == listName ? null : Colors.black54,
                 ),
               )
               .toList(),
