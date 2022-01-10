@@ -78,7 +78,7 @@ Future<bool> accountPatch(String? username, String? password) async {
     req['password'] = hash(password);
   }
   final res = await http.patch(
-    apiUrl.resolve('account'),
+    apiUrl.resolve('user'),
     headers: await jsonAuthHeader(),
     body: jsonEncode(req),
   );

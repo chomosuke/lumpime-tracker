@@ -3,14 +3,16 @@ import 'package:frontend/http/index.dart' as http;
 import 'package:frontend/states/account.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final _filmIdListsFutureProvider = FutureProvider((ref) => FilmIdLists._get());
-
-final filmIdListsProvider = ChangeNotifierProvider<FilmIdLists?>((ref) {
+final _filmIdListsFutureProvider = FutureProvider<FilmIdLists?>((ref) {
   final username = ref.watch(usernameProvider).value;
   if (username == null) {
-    return null;
+    return Future.value(null);
   }
 
+  return FilmIdLists._get();
+});
+
+final filmIdListsProvider = ChangeNotifierProvider<FilmIdLists?>((ref) {
   return ref.watch(_filmIdListsFutureProvider).value;
 });
 
