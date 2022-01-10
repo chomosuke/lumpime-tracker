@@ -57,7 +57,7 @@ class Film {
       map['url'],
       map['name'],
       List.from(map['alt_names']),
-      '', //map['english'],
+      map['english'],
       map['img_url'],
       map['episodes'],
       seasons,
