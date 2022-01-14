@@ -38,7 +38,7 @@ func crawlSeason(res *http.Response, season int) {
 			fmt.Printf("href doesn't exist for anime? season:%d", season)
 		}
 		url = url[:strings.LastIndex(url, "/")]
-		result, err := db.DBInst.Films.UpdateOne(
+		_, err := db.DBInst.Films.UpdateOne(
 			context.TODO(),
 			bson.M{"url": url},
 			bson.M{
@@ -47,9 +47,6 @@ func crawlSeason(res *http.Response, season int) {
 				},
 			},
 		)
-		if result.MatchedCount != 1 {
-			panic(result.MatchedCount)
-		}
 		if err != nil {
 			panic(err)
 		}

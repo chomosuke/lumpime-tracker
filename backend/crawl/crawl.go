@@ -54,13 +54,13 @@ func crawlCycle() {
 		if exists {
 			fmt.Println("crawling: " + url)
 			crawlSeason(res, variable.CurrentSeasonId)
+			variable.CurrentSeasonId++
 		} else {
 			variable.CurrentCrawlId = 1
 			variable.LastCrawledId = 0
 			variable.CurrentSeasonId = 0
 		}
 		res.Body.Close()
-		variable.CurrentSeasonId++
 	}
 
 	db.DBInst.Variables.ReplaceOne(context.TODO(), bson.M{}, variable)
