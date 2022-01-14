@@ -16,49 +16,53 @@ class TopBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 10,
-        right: 20,
-        bottom: 10,
-      ),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 1),
+    return LayoutBuilder(
+      builder: (context, constraints) => Container(
+        padding: const EdgeInsets.only(
+          left: 20,
+          top: 10,
+          right: 20,
+          bottom: 10,
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.network(
-            baseUrl.resolve('favicon.png').toString(),
-            height: 56,
-            filterQuality: FilterQuality.medium,
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey, width: 1),
           ),
-          const SizedBox(width: 20),
-          Text(
-            appName,
-            style: GoogleFonts.nunito(fontSize: 34, color: Colors.black54),
-          ),
-          const Spacer(flex: 6),
-          SizedBox(
-            width: 400,
-            child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              firstChild: const Search(),
-              secondChild: const SizedBox(height: 48),
-              crossFadeState:
-                  search ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.network(
+              baseUrl.resolve('favicon.png').toString(),
+              height: 56,
+              filterQuality: FilterQuality.medium,
             ),
-          ),
-          const Spacer(flex: 1),
-          Container(
-            alignment: Alignment.centerRight,
-            width: 150,
-            child: const Actions(),
-          )
-        ],
+            const SizedBox(width: 20),
+            if (constraints.maxWidth > 800)
+              Text(
+                appName,
+                style: GoogleFonts.nunito(fontSize: 34, color: Colors.black54),
+              ),
+            const Spacer(flex: 6),
+            SizedBox(
+              width: 400,
+              child: AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                firstChild: const Search(),
+                secondChild: const SizedBox(height: 48),
+                crossFadeState: search
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
+            ),
+            const Spacer(flex: 1),
+            Container(
+              alignment: Alignment.centerRight,
+              width: 150,
+              child: const Actions(),
+            )
+          ],
+        ),
       ),
     );
   }
