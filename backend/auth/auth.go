@@ -12,6 +12,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var Secret *string
@@ -40,6 +41,8 @@ func Middleware(c *gin.Context) {
 				c.Set(User, user)
 				c.Next()
 				return
+			} else if err != mongo.ErrNoDocuments {
+				panic(err)
 			}
 		}
 	}

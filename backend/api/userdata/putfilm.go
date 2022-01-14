@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func PutFilm(c *gin.Context) {
@@ -23,9 +24,11 @@ func PutFilm(c *gin.Context) {
 		return
 	}
 	err = db.DBInst.Films.FindOne(context.TODO(), bson.M{"_id": id}).Err()
-	if err != nil {
+	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusNotFound)
 		return
+	} else if err != nil {
+		panic(err)
 	}
 
 	userData := db.UserFilm{
@@ -43,6 +46,9 @@ func PutFilm(c *gin.Context) {
 			panic(err)
 		}
 	} else {
+		if err != mongo.ErrNoDocuments {
+			panic(err)
+		}
 		_, err := db.DBInst.UserFilms.InsertOne(context.TODO(), userData)
 		if err != nil {
 			panic(err)

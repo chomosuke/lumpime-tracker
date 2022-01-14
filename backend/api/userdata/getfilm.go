@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func GetFilm(c *gin.Context) {
@@ -19,16 +20,23 @@ func GetFilm(c *gin.Context) {
 		return
 	}
 	err = db.DBInst.Films.FindOne(context.TODO(), bson.M{"_id": id}).Err()
-	if err != nil {
+	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusNotFound)
 		return
+	} else if err != nil {
+		panic(err)
 	}
+
 	var userFilm db.UserFilm
 	err = db.DBInst.UserFilms.FindOne(
 		context.TODO(),
 		bson.M{"userId": user.ID, "filmId": id},
 	).Decode(&userFilm)
-	if err != nil {
+	if err != mongo.ErrNoDocuments && err != nil {
+		panic(err)
+	}
+
+	if err == mongo.ErrNoDocuments {
 		// not found
 		c.JSON(http.StatusOK, bson.M{})
 	} else {

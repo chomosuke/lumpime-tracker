@@ -8,6 +8,7 @@ import (
 	"github.com/chomosuke/backend/db"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type loginReq struct {
@@ -25,9 +26,11 @@ func Login(c *gin.Context) {
 		"username": req.Username,
 		"password": req.Password,
 	}).Decode(&user)
-	if err != nil {
+	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusUnauthorized)
 		return
+	} else if err != nil {
+		panic(err)
 	}
 	c.String(http.StatusOK, auth.GetToken(user.ID.Hex()))
 }

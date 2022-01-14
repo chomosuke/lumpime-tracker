@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func Film(c *gin.Context) {
@@ -18,9 +19,11 @@ func Film(c *gin.Context) {
 		return
 	}
 	err = db.DBInst.Films.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&film)
-	if err != nil {
+	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusNotFound)
 		return
+	} else if err != nil {
+		panic(err)
 	}
 
 	c.JSON(http.StatusOK, gin.H{

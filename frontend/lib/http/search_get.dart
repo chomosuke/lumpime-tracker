@@ -52,6 +52,7 @@ class Film {
 
   factory Film.fromMap(Map<String, dynamic> map) {
     final seasons = List<int>.from(map['seasons']);
+    seasons.sort();
     final seasonsName = seasons.map<String>((s) => intToSeason(s)).toList();
     return Film._(
       map['url'],

@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type registerReq struct {
@@ -39,7 +40,11 @@ func Register(c *gin.Context) {
 }
 
 func UsernameExist(username string) bool {
-	return db.DBInst.Users.FindOne(context.TODO(), bson.M{
+	err := db.DBInst.Users.FindOne(context.TODO(), bson.M{
 		"username": username,
-	}).Err() == nil
+	}).Err()
+	if err != mongo.ErrNoDocuments && err != nil {
+		panic(err)
+	}
+	return err != mongo.ErrNoDocuments
 }

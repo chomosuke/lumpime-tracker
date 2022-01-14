@@ -18,6 +18,7 @@ type Database struct {
 	Users     *mongo.Collection
 	UserFilms *mongo.Collection
 	Films     *mongo.Collection
+	Variables *mongo.Collection
 }
 
 func InitDb(connectionString string) (Database, func()) {
@@ -42,6 +43,7 @@ func InitDb(connectionString string) (Database, func()) {
 	db.Users = db.DB.Collection("users")
 	db.UserFilms = db.DB.Collection("userFilms")
 	db.Films = db.DB.Collection("films")
+	db.Variables = db.DB.Collection("variables")
 
 	// create indexes
 	db.Users.Indexes().CreateOne(context.Background(), mongo.IndexModel{
@@ -51,6 +53,13 @@ func InitDb(connectionString string) (Database, func()) {
 	db.UserFilms.Indexes().CreateOne(context.Background(), mongo.IndexModel{
 		Keys:    bson.M{"userId": 1, "filmId": 1},
 		Options: options.Index().SetUnique(true),
+	})
+	db.Films.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+		{Keys: bson.M{"key_words": "text"}},
+		{Keys: bson.M{"status": 1}},
+		{Keys: bson.M{"genres": 1}},
+		{Keys: bson.M{"seasons": 1}},
+		{Keys: bson.M{"url": 1}, Options: options.Index().SetUnique(true)},
 	})
 
 	return *db, func() {
@@ -86,4 +95,10 @@ type Film struct {
 	Seasons  []int               `bson:"seasons"`
 	Genres   []string            `bson:"genres"`
 	Status   string              `bson:"status"`
+}
+
+type Variables struct {
+	LastCrawledId   int `bson:"last_crawled_id"`
+	CurrentCrawlId  int `bson:"current_crawled_id"`
+	CurrentSeasonId int `bson:"current_season_id"`
 }

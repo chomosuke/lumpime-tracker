@@ -9,6 +9,7 @@ import (
 	"github.com/chomosuke/backend/api/search"
 	"github.com/chomosuke/backend/api/userdata"
 	"github.com/chomosuke/backend/auth"
+	"github.com/chomosuke/backend/crawl"
 	"github.com/chomosuke/backend/db"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
@@ -29,6 +30,9 @@ func main() {
 	database, cleanup := db.InitDb(*dbConnection)
 	db.DBInst = database
 	defer cleanup()
+
+	// start crawling
+	go crawl.Crawl()
 
 	if *release {
 		gin.SetMode(gin.ReleaseMode)
@@ -57,7 +61,6 @@ func main() {
 	endpoints := r.Group("/api")
 	{
 		endpoints.GET("/meta", search.Meta)
-		endpoints.POST("/crawl", search.Crawl)
 		endpoints.GET("/query", search.Query)
 		endpoints.GET("/film/:id", search.Film)
 
