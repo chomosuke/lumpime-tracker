@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart' hide Card;
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,15 +26,20 @@ class Grid extends HookConsumerWidget {
       );
     }
 
+    final controller = useScrollController();
+
     const maxCrossAxisExtent = 182 * 2.0;
-    return Container(
-      alignment: Alignment.topCenter,
-      child: SizedBox(
-        width: 1600,
+    return LayoutBuilder(
+      builder: (context, constrains) => Scrollbar(
+        controller: controller,
+        isAlwaysShown: true,
         child: GridView.builder(
+          controller: controller,
           itemCount: filmIds.length,
-          padding:
-              const EdgeInsets.all(30).add(padding ?? const EdgeInsets.all(0)),
+          padding: const EdgeInsets.all(30)
+              .add(padding ?? const EdgeInsets.all(0))
+              .add(EdgeInsets.symmetric(
+                  horizontal: max((constrains.maxWidth - 1600) / 2, 0))),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxCrossAxisExtent,
             childAspectRatio: 400 / 600,
