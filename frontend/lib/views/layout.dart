@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class Layout extends HookConsumerWidget {
   final Widget topBar;
@@ -18,15 +19,13 @@ class Layout extends HookConsumerWidget {
       child: Column(
         children: [
           topBar,
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                navBar,
-                Expanded(child: page),
-              ],
-            ),
-          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              navBar,
+              page.expanded(),
+            ],
+          ).expanded(),
         ],
       ),
     );

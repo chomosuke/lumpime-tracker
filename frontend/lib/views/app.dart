@@ -43,13 +43,6 @@ class App extends HookConsumerWidget {
                 builder: (context) => FilmListPage(uri.pathSegments[0]),
               );
             }
-
-            if (uri.pathSegments.length == 2 &&
-                uri.pathSegments[0] == filmRoutePrefix) {
-              return MyPageRoute(
-                builder: (context) => FilmPage(uri.pathSegments[1]),
-              );
-            }
           },
         ),
       ),

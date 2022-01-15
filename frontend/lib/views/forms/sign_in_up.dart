@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class SignInUp extends HookConsumerWidget {
   const SignInUp({Key? key}) : super(key: key);
@@ -48,90 +49,83 @@ class SignInUp extends HookConsumerWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
-        width: 300,
-        margin: const EdgeInsets.all(25),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 25),
-            TextField(
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: 'username',
-                errorText: usernameError,
-              ),
-              controller: usernameController,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 25),
+          TextField(
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: 'username',
+              errorText: usernameError,
             ),
-            const SizedBox(height: 25),
+            controller: usernameController,
+          ),
+          const SizedBox(height: 25),
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: 'password',
+              errorText: passwordError,
+            ),
+            controller: passwordController,
+          ),
+          const SizedBox(height: 25),
+          if (!logIn.value)
             TextField(
               obscureText: true,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                hintText: 'password',
-                errorText: passwordError,
+                hintText: 'repeat password',
+                errorText: passwordRepeatError,
               ),
-              controller: passwordController,
+              controller: passwordRepeatController,
             ),
-            const SizedBox(height: 25),
-            if (!logIn.value)
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: 'repeat password',
-                  errorText: passwordRepeatError,
+          if (!logIn.value) const SizedBox(height: 25),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton(
+                onPressed: processing
+                    ? null
+                    : () {
+                        attempted.value = true;
+                        if (logIn.value) {
+                          ref.read(accountProvider.notifier).login(
+                                usernameController.text,
+                                passwordController.text,
+                              );
+                        } else {
+                          if (passwordController.text != '' &&
+                              passwordController.text ==
+                                  passwordRepeatController.text) {
+                            ref.read(accountProvider.notifier).register(
+                                usernameController.text,
+                                passwordRepeatController.text);
+                          }
+                        }
+                      },
+                child: Text(logIn.value ? 'Log In' : 'Sign Up'),
+              ),
+              SizedBox.fromSize(size: const Size(0, 25)),
+              OutlinedButton(
+                onPressed: () {
+                  logIn.value = !logIn.value;
+                  attempted.value = false;
+                  usernameController.clear();
+                  passwordController.clear();
+                  passwordRepeatController.clear();
+                },
+                child: Text(
+                  logIn.value ? 'Sign Up instead' : 'Log In instead',
                 ),
-                controller: passwordRepeatController,
               ),
-            if (!logIn.value) const SizedBox(height: 25),
-            SizedBox(
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton(
-                    onPressed: processing
-                        ? null
-                        : () {
-                            attempted.value = true;
-                            if (logIn.value) {
-                              ref.read(accountProvider.notifier).login(
-                                    usernameController.text,
-                                    passwordController.text,
-                                  );
-                            } else {
-                              if (passwordController.text != '' &&
-                                  passwordController.text ==
-                                      passwordRepeatController.text) {
-                                ref.read(accountProvider.notifier).register(
-                                    usernameController.text,
-                                    passwordRepeatController.text);
-                              }
-                            }
-                          },
-                    child: Text(logIn.value ? 'Log In' : 'Sign Up'),
-                  ),
-                  SizedBox.fromSize(size: const Size(0, 25)),
-                  OutlinedButton(
-                    onPressed: () {
-                      logIn.value = !logIn.value;
-                      attempted.value = false;
-                      usernameController.clear();
-                      passwordController.clear();
-                      passwordRepeatController.clear();
-                    },
-                    child: Text(
-                      logIn.value ? 'Sign Up instead' : 'Log In instead',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 25),
-          ],
-        ),
-      ),
+            ],
+          ).width(200),
+          const SizedBox(height: 25),
+        ],
+      ).width(300).padding(all: 25),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/states/index.dart';
 import 'package:frontend/views/app.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 const listNameToIcon = <String, Icon>{
   toWatch: Icon(Icons.watch_later),
@@ -26,42 +27,37 @@ class NavBar extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = useState('/');
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          right: BorderSide(color: Colors.grey, width: 1),
+    return Column(
+      children: [
+        IconButton(
+          iconSize: 40,
+          onPressed: () {
+            Navigator.of(navigatorKey.currentContext!).pushNamed('/');
+            selected.value = '/';
+            ref.read(queryRangeProvider.state).state = initQueryRange;
+          },
+          icon: const Icon(Icons.search),
+          color: selected.value == '/' ? null : Colors.black54,
+          tooltip: 'Search',
         ),
-      ),
-      child: Column(
-        children: [
-          IconButton(
-            iconSize: 40,
-            onPressed: () {
-              Navigator.of(navigatorKey.currentContext!).pushNamed('/');
-              selected.value = '/';
-              ref.read(queryRangeProvider.state).state = initQueryRange;
-            },
-            icon: const Icon(Icons.search),
-            color: selected.value == '/' ? null : Colors.black54,
-            tooltip: 'Search',
-          ),
-          ...listNames
-              .map<Widget>(
-                (listName) => IconButton(
-                  iconSize: 40,
-                  onPressed: () {
-                    Navigator.of(navigatorKey.currentContext!)
-                        .pushNamed('/$listName');
-                    selected.value = listName;
-                  },
-                  icon: listNameToIcon[listName]!,
-                  color: selected.value == listName ? null : Colors.black54,
-                  tooltip: listNameToToolTip[listName],
-                ),
-              )
-              .toList(),
-        ],
-      ),
+        ...listNames
+            .map<Widget>(
+              (listName) => IconButton(
+                iconSize: 40,
+                onPressed: () {
+                  Navigator.of(navigatorKey.currentContext!)
+                      .pushNamed('/$listName');
+                  selected.value = listName;
+                },
+                icon: listNameToIcon[listName]!,
+                color: selected.value == listName ? null : Colors.black54,
+                tooltip: listNameToToolTip[listName],
+              ),
+            )
+            .toList(),
+      ],
+    ).decorated(
+      border: const Border(right: BorderSide(color: Colors.grey, width: 1)),
     );
   }
 }

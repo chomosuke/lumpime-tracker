@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class FilmImage extends HookConsumerWidget {
   const FilmImage({
@@ -12,22 +13,18 @@ class FilmImage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return imgUrl == ''
-        ? SizedBox(
-            width: 400,
-            height: 400,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                width: 200,
-                height: 200,
-                child: const Center(
-                  child: Text('No image'),
-                ),
-              ),
-            ),
-          )
+        ? const Text('No image')
+            .center()
+            .constrained(
+              width: 200,
+              height: 200,
+            )
+            .decorated(border: Border.all())
+            .center()
+            .constrained(
+              width: 400,
+              height: 400,
+            )
         : Image.network(
             imgUrl,
             width: 400,

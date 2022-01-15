@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/http/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class FilmDetails extends HookConsumerWidget {
   final Film data;
@@ -24,36 +25,33 @@ class FilmDetails extends HookConsumerWidget {
     final firstSeason = data.firstSeason == '' ? '?' : data.firstSeason;
 
     // status, first season, episodes,
-    return SizedBox(
-      height: 128,
-      child: Column(
-        children: [
-          Text(
-            data.name,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            style: titleTextStyle,
-          ),
-          Text(
-            data.englishName,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            style: smallTextStyle,
-          ),
-          const Spacer(),
-          Text(
-            '$firstSeason | ${data.status} | $episodes eps',
-            style: smallTextStyle,
-          ),
-          const SizedBox(height: 5),
-          Text(
-            data.genres.join(' '),
-            style: smallTextStyle,
-          ),
-        ],
-      ),
-    );
+    return Column(
+      children: [
+        Text(
+          data.name,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          style: titleTextStyle,
+        ),
+        Text(
+          data.englishName,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          style: smallTextStyle,
+        ),
+        const Spacer(),
+        Text(
+          '$firstSeason | ${data.status} | $episodes eps',
+          style: smallTextStyle,
+        ),
+        const SizedBox(height: 5),
+        Text(
+          data.genres.join(' '),
+          style: smallTextStyle,
+        ),
+      ],
+    ).height(128);
   }
 }

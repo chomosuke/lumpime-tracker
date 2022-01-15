@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/states/index.dart';
 import '../index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class QueryPage extends HookConsumerWidget {
   const QueryPage({Key? key}) : super(key: key);
@@ -20,12 +21,7 @@ class QueryPage extends HookConsumerWidget {
       alignment: Alignment.bottomCenter,
       children: [
         queryResult.when(
-            loading: () => const Center(
-                  child: SizedBox(
-                    width: 500,
-                    child: LinearProgressIndicator(),
-                  ),
-                ),
+            loading: () => const LinearProgressIndicator().width(500).center(),
             error: (error, stackTrace) => Text('Error: $stackTrace'),
             data: (queryResult) {
               hasNext.value = queryResult.filmIds.length == queryRange.limit;
@@ -35,63 +31,55 @@ class QueryPage extends HookConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 56),
               );
             }),
-        Container(
-          margin: const EdgeInsets.only(bottom: 28),
-          child: Material(
-            elevation: 16,
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: 85,
-                    child: OutlinedButton(
-                      onPressed: pageIndex > 1
-                          ? () {
-                              ref.read(queryRangeProvider.state).state =
-                                  QueryRange(
-                                queryRange.start - queryRange.limit,
-                                queryRange.limit,
-                              );
-                            }
-                          : null,
-                      child: const Text(
-                        'previous',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  AnimatedSwitcher(
-                    child: Text('   $pageIndex   ', key: ValueKey(pageIndex)),
-                    duration: const Duration(milliseconds: 300),
-                  ),
-                  SizedBox(
-                    width: 85,
-                    child: OutlinedButton(
-                      onPressed: hasNext.value
-                          ? () {
-                              ref.read(queryRangeProvider.state).state =
-                                  QueryRange(
-                                queryRange.start + queryRange.limit,
-                                queryRange.limit,
-                              );
-                              hasNext.value = false;
-                            }
-                          : null,
-                      child: const Text(
-                        'next',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            OutlinedButton(
+              onPressed: pageIndex > 1
+                  ? () {
+                      ref.read(queryRangeProvider.state).state = QueryRange(
+                        queryRange.start - queryRange.limit,
+                        queryRange.limit,
+                      );
+                    }
+                  : null,
+              child: const Text(
+                'previous',
+                style: TextStyle(color: Colors.black),
               ),
+            ).width(85),
+            AnimatedSwitcher(
+              child: Text('   $pageIndex   ', key: ValueKey(pageIndex)),
+              duration: const Duration(milliseconds: 300),
             ),
-          ),
-        ),
+            OutlinedButton(
+              onPressed: hasNext.value
+                  ? () {
+                      ref.read(queryRangeProvider.state).state = QueryRange(
+                        queryRange.start + queryRange.limit,
+                        queryRange.limit,
+                      );
+                      hasNext.value = false;
+                    }
+                  : null,
+              child: const Text(
+                'next',
+                style: TextStyle(color: Colors.black),
+              ),
+            ).width(85),
+          ],
+        )
+            .padding(all: 10)
+            .decorated(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            )
+            .elevation(
+              16,
+              borderRadius: BorderRadius.circular(10),
+            )
+            .padding(bottom: 28),
       ],
     );
   }

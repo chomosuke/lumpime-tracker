@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
 import '../index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class FilmListPage extends HookConsumerWidget {
   final String listName;
@@ -19,12 +20,7 @@ class FilmListPage extends HookConsumerWidget {
     }
 
     return filmIdLists == null
-        ? const Center(
-            child: SizedBox(
-              width: 500,
-              child: LinearProgressIndicator(),
-            ),
-          )
+        ? const LinearProgressIndicator().width(500).center()
         : Grid(
             filmIdLists[listName]!.list,
             showEpisodeTracker: listName == watching,
