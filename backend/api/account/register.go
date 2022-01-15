@@ -28,9 +28,9 @@ func Register(c *gin.Context) {
 		return
 	}
 	user := db.User{
-		Username: req.Username,
-		Password: req.Password,
-		Data:     bson.M{},
+		Username:  req.Username,
+		Password:  req.Password,
+		FilmLists: []db.FilmList{},
 	}
 	result, err := db.DBInst.Users.InsertOne(context.TODO(), user)
 	if err != nil {

@@ -72,7 +72,7 @@ response: {
 }
 ```
 
-# User data
+# User Film Data
 
 ## PUT `/user/film/:id`
 ```
@@ -91,15 +91,42 @@ response: {
 }
 ```
 
-## PUT `/user/data`
-request: auth_token
-{
-    // arbitary json object
-}
-response: none
+# Film List
 
-## GET `/user/data`
+## POST `/user/filmList`
+```
 request: auth_token
-response: {
-    // arbitary json object
-}
+String // key
+response: none
+```
+
+## GET `/user/filmLists`
+```
+request: auth_token
+response: [String] // keys
+```
+
+## DELETE `/user/filmList/:key`
+```
+request: auth_token
+response: none
+```
+
+## POST `/user/filmList/item/:key`
+```
+request: auth_token
+String // id
+response: none
+```
+
+## GET `/user/filmList/items/:key`
+```
+request: auth_token
+response: [String] // ids
+```
+
+## DELETE `/user/filmList/item/:key/:id`
+```
+request: auth_token
+response: none
+```

@@ -1,4 +1,4 @@
-package userdata
+package userfilm
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func GetFilm(c *gin.Context) {
+func Get(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {

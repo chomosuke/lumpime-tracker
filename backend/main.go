@@ -6,8 +6,9 @@ import (
 	"time"
 
 	"github.com/chomosuke/backend/api/account"
+	"github.com/chomosuke/backend/api/filmlist"
 	"github.com/chomosuke/backend/api/search"
-	"github.com/chomosuke/backend/api/userdata"
+	"github.com/chomosuke/backend/api/userfilm"
 	"github.com/chomosuke/backend/auth"
 	"github.com/chomosuke/backend/crawl"
 	"github.com/chomosuke/backend/db"
@@ -67,7 +68,7 @@ func main() {
 		endpoints.POST("/login", account.Login)
 		endpoints.POST("/register", account.Register)
 
-		authorized := endpoints.Group("/")
+		authorized := endpoints.Group("")
 		authorized.Use(auth.Middleware)
 		{
 			authorized.PATCH("/user", account.Patch)
@@ -75,10 +76,14 @@ func main() {
 
 			userData := authorized.Group("/user")
 			{
-				userData.GET("/film/:id", userdata.GetFilm)
-				userData.PUT("/film/:id", userdata.PutFilm)
-				userData.GET("/data", userdata.GetData)
-				userData.PUT("/data", userdata.PutData)
+				userData.GET("/film/:id", userfilm.Get)
+				userData.PUT("/film/:id", userfilm.Put)
+
+				filmList := userData.Group("/filmList")
+				{
+					filmList.POST("", filmlist.PostList)
+				}
+				userData.GET("/filmLists", filmlist.GetLists)
 			}
 		}
 	}

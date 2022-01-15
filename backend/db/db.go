@@ -69,11 +69,16 @@ func InitDb(connectionString string) (Database, func()) {
 	}
 }
 
+type FilmList struct {
+	Key string   `bson:"key"`
+	IDs []string `bson:"ids"`
+}
+
 type User struct {
-	ID       *primitive.ObjectID `bson:"_id,omitempty"`
-	Username string              `bson:"username"`
-	Password string              `bson:"password"`
-	Data     interface{}         `bson:"data"`
+	ID        *primitive.ObjectID `bson:"_id,omitempty"`
+	Username  string              `bson:"username"`
+	Password  string              `bson:"password"`
+	FilmLists []FilmList          `bson:"film_lists"`
 }
 
 type UserFilm struct {

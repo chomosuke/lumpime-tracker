@@ -1,4 +1,4 @@
-package userdata
+package userfilm
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func PutFilm(c *gin.Context) {
+func Put(c *gin.Context) {
 	user := c.MustGet(auth.User).(db.User)
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
@@ -40,15 +40,16 @@ func PutFilm(c *gin.Context) {
 		"filmId": &id,
 		"userId": user.ID,
 	}
-	if db.DBInst.UserFilms.FindOne(context.TODO(), filter).Err() == nil {
+	err = db.DBInst.UserFilms.FindOne(context.TODO(), filter).Err()
+	if err != mongo.ErrNoDocuments && err != nil {
+		panic(err)
+	}
+	if err != mongo.ErrNoDocuments {
 		result, err := db.DBInst.UserFilms.ReplaceOne(context.TODO(), filter, userData)
 		if err != nil || result.MatchedCount != 1 {
 			panic(err)
 		}
 	} else {
-		if err != mongo.ErrNoDocuments {
-			panic(err)
-		}
 		_, err := db.DBInst.UserFilms.InsertOne(context.TODO(), userData)
 		if err != nil {
 			panic(err)
