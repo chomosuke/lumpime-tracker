@@ -56,8 +56,6 @@ class NavBar extends HookConsumerWidget {
             )
             .toList(),
       ],
-    ).decorated(
-      border: const Border(right: BorderSide(color: Colors.grey, width: 1)),
-    );
+    ).border(color: Colors.grey, right: 1);
   }
 }

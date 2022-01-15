@@ -43,11 +43,9 @@ class TopBar extends HookConsumerWidget {
           const Spacer(flex: 1),
           const Actions().width(150).alignment(Alignment.centerRight),
         ],
-      ).padding(vertical: 10, horizontal: 20).decorated(
-            border: const Border(
-              bottom: BorderSide(color: Colors.grey, width: 1),
-            ),
-          ),
+      )
+          .padding(vertical: 10, horizontal: 20)
+          .border(color: Colors.grey, bottom: 1),
     );
   }
 }
