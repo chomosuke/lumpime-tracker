@@ -1,5 +1,7 @@
 - 200 if okay
+- 204 if already deleted or not found
 - 401 if unauthorized
+- 404 if not found
 - 409 if conflict
 
 # Account
