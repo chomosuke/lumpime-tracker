@@ -88,6 +88,7 @@ func main() {
 					{
 						filmListItem.POST("/:key", filmlist.PostListItem)
 					}
+					filmList.GET("/items/:key", filmlist.GetListItems)
 				}
 				userData.GET("/filmLists", filmlist.GetLists)
 			}
