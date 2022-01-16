@@ -2,7 +2,7 @@ import 'package:frontend/http/index.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final queryProvider = StateProvider<Query>(
-  (ref) => Query('', [], []),
+  (ref) => const Query('', [], []),
 );
 
 final queryResultProvider = FutureProvider<QueryResult>((ref) async {
@@ -26,8 +26,7 @@ class Query {
   final String text;
   final List<int> seasons;
   final List<String> genres;
-
-  Query(this.text, this.seasons, this.genres);
+  const Query(this.text, this.seasons, this.genres);
 }
 
 class QueryResult {
