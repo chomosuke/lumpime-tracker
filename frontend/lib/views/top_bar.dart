@@ -33,15 +33,13 @@ class TopBar extends HookConsumerWidget {
               style: GoogleFonts.nunito(fontSize: 34, color: Colors.black54),
             ),
           const Spacer(flex: 6),
-          AnimatedCrossFade(
-            duration: const Duration(milliseconds: 300),
-            firstChild: const Search(),
-            secondChild: const SizedBox(height: 48),
-            crossFadeState:
-                search ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-          ).width(400),
+          constraints.maxWidth > 600
+              ? const Search().width(400)
+              : const Search().flexible(flex: 1000),
           const Spacer(flex: 1),
-          const Actions().width(150).alignment(Alignment.centerRight),
+          constraints.maxWidth > 660
+              ? const Actions().alignment(Alignment.centerRight).width(150)
+              : const Actions(short: true).width(40),
         ],
       )
           .padding(vertical: 10, horizontal: 20)
@@ -80,7 +78,8 @@ class Search extends HookConsumerWidget {
 }
 
 class Actions extends HookConsumerWidget {
-  const Actions({Key? key}) : super(key: key);
+  final bool short;
+  const Actions({this.short = false, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,28 +90,41 @@ class Actions extends HookConsumerWidget {
       error: (err, stack) => Text('Error: $stack'),
       data: (username) {
         if (username == null) {
-          return TextButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => const SignInUp(),
-              );
-            },
-            child: const Text(
-              'Log In / Sign Up',
-              style: TextStyle(color: Colors.black),
-            ),
-          );
+          void onPressed() {
+            showDialog(
+              context: context,
+              builder: (context) => const SignInUp(),
+            );
+          }
+
+          return short
+              ? PopupMenuButton(
+                  onSelected: (value) => onPressed(),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      child: Text('Log In / Sign Up'),
+                      value: '',
+                    ),
+                  ],
+                )
+              : TextButton(
+                  onPressed: onPressed,
+                  child: const Text(
+                    'Log In / Sign Up',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                );
         } else {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Hi $username',
-                softWrap: false,
-                overflow: TextOverflow.fade,
-              ).flexible(),
+              if (!short)
+                Text(
+                  'Hi $username',
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                ).flexible(),
               PopupMenuButton(
                 onSelected: (value) {
                   switch (value) {
