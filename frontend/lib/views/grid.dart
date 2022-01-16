@@ -71,6 +71,10 @@ class Grid extends HookConsumerWidget {
   }
 
   Future<List<String>> filterViaQuery(List<String> filmIds, Query query) async {
+    if (query.genres.isEmpty && query.seasons.isEmpty && query.text.isEmpty) {
+      return filmIds;
+    }
+
     final result = <String>[];
     final filmTuples = await Future.wait(
         filmIds.map((id) async => Tuple2<String, Film>(id, await filmGet(id))));
