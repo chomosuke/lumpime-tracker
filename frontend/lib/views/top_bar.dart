@@ -12,8 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class TopBar extends HookConsumerWidget {
-  final bool search;
-  const TopBar({this.search = false, Key? key}) : super(key: key);
+  const TopBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

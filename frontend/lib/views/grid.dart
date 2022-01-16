@@ -2,10 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:frontend/http/index.dart';
+import 'package:frontend/states/index.dart';
+import 'package:tuple/tuple.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Grid extends HookConsumerWidget {
+  final bool filter;
   final List<String> filmIds;
   final bool showEpisodeTracker;
   final String emptyMessage;
@@ -13,6 +17,7 @@ class Grid extends HookConsumerWidget {
   const Grid(
     this.filmIds, {
     this.showEpisodeTracker = false,
+    this.filter = false,
     this.emptyMessage = '',
     this.padding,
     Key? key,
@@ -20,6 +25,15 @@ class Grid extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var filmIds = this.filmIds;
+    final query = ref.watch(queryProvider);
+    final filmIdsSnapshot = useFuture(
+      filter ? filterViaQuery(filmIds, query) : Future.value(<String>[]),
+    );
+    if (filter && filmIdsSnapshot.hasData) {
+      filmIds = filmIdsSnapshot.data!;
+    }
+
     if (filmIds.isEmpty) {
       return Center(
         child: Text(emptyMessage),
@@ -54,5 +68,38 @@ class Grid extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<List<String>> filterViaQuery(List<String> filmIds, Query query) async {
+    final result = <String>[];
+    final filmTuples = await Future.wait(
+        filmIds.map((id) async => Tuple2<String, Film>(id, await filmGet(id))));
+    for (final filmTuple in filmTuples) {
+      final film = filmTuple.item2;
+      if (query.genres.isNotEmpty &&
+          query.genres.any((genre) => !film.genres.contains(genre))) {
+        // if any query genres isn't contained by the film
+        continue;
+      }
+      if (query.seasons.isNotEmpty &&
+          !query.seasons.any((season) => film.seasons.contains(season))) {
+        // if no query season is contained by the film
+        continue;
+      }
+      if (query.text.isNotEmpty &&
+          !query.text.split(' ').every((token) {
+            String keyWords = film.altNames.join(' ') +
+                ' ' +
+                film.name +
+                ' ' +
+                film.englishName;
+            return keyWords.toLowerCase().contains(token.toLowerCase());
+          })) {
+        // if film doesn't contain every token of query
+        continue;
+      }
+      result.add(filmTuple.item1);
+    }
+    return result;
   }
 }

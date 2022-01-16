@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'index.dart';
 
@@ -14,26 +13,22 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searching = useState(true);
     return MaterialApp(
       title: appName,
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
       home: Layout(
-        topBar: TopBar(search: searching.value),
+        topBar: const TopBar(),
         navBar: const NavBar(),
         page: Navigator(
           key: navigatorKey,
           initialRoute: '/',
           onGenerateRoute: (settings) {
             if (settings.name == '/' || settings.name == null) {
-              searching.value = true;
               return MyPageRoute(
                 builder: (context) => const QueryPage(),
               );
-            } else {
-              searching.value = false;
             }
 
             final uri = Uri.parse(settings.name!);

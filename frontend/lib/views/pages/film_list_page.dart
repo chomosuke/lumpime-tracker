@@ -23,6 +23,7 @@ class FilmListPage extends HookConsumerWidget {
         ? const LinearProgressIndicator().width(500).center()
         : Grid(
             filmIdLists[listName]!.list,
+            filter: true,
             showEpisodeTracker: listName == watching,
             emptyMessage: 'You don\'t have any anime in this list',
           );
