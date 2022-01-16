@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'user_data.dart';
-import 'url.dart';
+import 'index.dart';
 import 'package:frontend/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
@@ -28,7 +27,6 @@ Future<void> saveToken(String authToken) =>
 Future<void> logout() async {
   await storage.delete(key: authKey);
   userFilmCache = {};
-  userDataCache = null;
 }
 
 Future<bool> login(String username, String password) async {
