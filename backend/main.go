@@ -87,6 +87,7 @@ func main() {
 					filmListItem := filmList.Group("/item")
 					{
 						filmListItem.POST("/:key", filmlist.PostListItem)
+						filmListItem.DELETE("/:key/:id", filmlist.DeleteListItem)
 					}
 					filmList.GET("/items/:key", filmlist.GetListItems)
 				}
