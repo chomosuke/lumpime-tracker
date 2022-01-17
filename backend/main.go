@@ -89,7 +89,11 @@ func main() {
 						filmListItem.POST("/:key", filmlist.PostListItem)
 						filmListItem.DELETE("/:key/:id", filmlist.DeleteListItem)
 					}
-					filmList.GET("/items/:key", filmlist.GetListItems)
+					filmListItems := filmList.Group("/items")
+					{
+						filmListItems.GET("/:key", filmlist.GetListItems)
+						filmListItems.PUT("/:key", filmlist.PutListItems)
+					}
 				}
 				userData.GET("/filmLists", filmlist.GetLists)
 			}

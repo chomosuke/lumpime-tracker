@@ -132,3 +132,10 @@ response: [String] // ids
 request: auth_token
 response: none
 ```
+
+## PUT `/user/filmList/items/:key`
+```
+request: auth_token
+[String] // ids
+response: none
+```
