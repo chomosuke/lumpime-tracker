@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/chomosuke/backend/api/account"
@@ -56,6 +57,14 @@ func main() {
 		r.Use(func(c *gin.Context) {
 			time.Sleep(500 * time.Millisecond)
 			c.Next()
+		})
+	} else {
+		// redirect http
+		r.Use(func(c *gin.Context) {
+			if c.GetHeader("x-forwarded-proto") != "https" {
+				c.Redirect(http.StatusPermanentRedirect, "https://"+c.Request.Host+c.Request.URL.Path)
+				c.Abort()
+			}
 		})
 	}
 
