@@ -83,6 +83,13 @@ class FilmIdList extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reorder(int oldIndex, int newIndex) {
+    final id = list.removeAt(oldIndex);
+    list.insert(newIndex, id);
+    http.filmListItemsPut(key, list);
+    notifyListeners();
+  }
+
   bool contains(String filmId) {
     return _set.contains(filmId);
   }

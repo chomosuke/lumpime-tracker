@@ -21,6 +21,10 @@ dependencies:
   styled_widget: ^0.4.0+3
   cupertino_icons: ^1.0.2
   tuple: ^2.0.0
+  drag_and_drop_gridview:
+    git: 
+      url: https://github.com/DevOrbiter/drag_and_drop_gridview.git
+      ref: master
 
 dev_dependencies:
   flutter_test:

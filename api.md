@@ -127,15 +127,15 @@ request: auth_token
 response: [String] // ids
 ```
 
-## DELETE `/user/filmList/item/:key/:id`
-```
-request: auth_token
-response: none
-```
-
 ## PUT `/user/filmList/items/:key`
 ```
 request: auth_token
 [String] // ids
+response: none
+```
+
+## DELETE `/user/filmList/item/:key/:id`
+```
+request: auth_token
 response: none
 ```

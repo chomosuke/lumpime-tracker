@@ -60,6 +60,17 @@ Future<List<String>?> filmListItemsGet(String key) async {
   return List.from(jsonDecode(res.body));
 }
 
+Future<void> filmListItemsPut(String key, List<String> ids) async {
+  final res = await http.put(
+    apiUrl.resolve('user/filmList/items/$key'),
+    headers: await jsonAuthHeader(),
+    body: jsonEncode(ids),
+  );
+  if (res.statusCode != StatusCode.OK) {
+    throw Error();
+  }
+}
+
 Future<void> filmListItemDelete(String key, String filmId) async {
   final res = await http.delete(
     apiUrl.resolve('user/filmList/item/$key/$filmId'),

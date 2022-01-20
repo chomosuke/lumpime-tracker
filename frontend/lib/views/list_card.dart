@@ -5,10 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'card/index.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class Card extends HookConsumerWidget {
+class ListCard extends HookConsumerWidget {
   final String filmId;
   final bool showEpisodeTracker;
-  const Card({required this.showEpisodeTracker, required this.filmId, Key? key})
+  const ListCard(
+      {required this.showEpisodeTracker, required this.filmId, Key? key})
       : super(key: key);
 
   @override

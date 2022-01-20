@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/http/index.dart';
@@ -8,16 +7,14 @@ import 'package:tuple/tuple.dart';
 import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Grid extends HookConsumerWidget {
-  final bool filter;
+class ListGrid extends HookConsumerWidget {
   final List<String> filmIds;
   final bool showEpisodeTracker;
   final String emptyMessage;
   final EdgeInsetsGeometry? padding;
-  const Grid(
+  const ListGrid(
     this.filmIds, {
     this.showEpisodeTracker = false,
-    this.filter = false,
     this.emptyMessage = '',
     this.padding,
     Key? key,
@@ -27,10 +24,8 @@ class Grid extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var filmIds = this.filmIds;
     final query = ref.watch(queryProvider);
-    final filmIdsSnapshot = useFuture(
-      filter ? filterViaQuery(filmIds, query) : Future.value(<String>[]),
-    );
-    if (filter && filmIdsSnapshot.hasData) {
+    final filmIdsSnapshot = useFuture(filterViaQuery(filmIds, query));
+    if (filmIdsSnapshot.hasData) {
       filmIds = filmIdsSnapshot.data!;
     }
 
@@ -53,15 +48,15 @@ class Grid extends HookConsumerWidget {
           padding: const EdgeInsets.all(30)
               .add(padding ?? const EdgeInsets.all(0))
               .add(EdgeInsets.symmetric(
-                  horizontal: max((constrains.maxWidth - 1600) / 2, 0))),
+                horizontal: max((constrains.maxWidth - 1600) / 2, 0),
+              )),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxCrossAxisExtent,
             childAspectRatio: 400 / 600,
             crossAxisSpacing: 30,
             mainAxisSpacing: 30,
           ),
-          shrinkWrap: true,
-          itemBuilder: (context, index) => Card(
+          itemBuilder: (context, index) => ListCard(
             filmId: filmIds[index],
             showEpisodeTracker: showEpisodeTracker,
           ),

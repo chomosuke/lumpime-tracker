@@ -25,7 +25,7 @@ class QueryPage extends HookConsumerWidget {
             error: (error, stackTrace) => Text('Error: $stackTrace'),
             data: (queryResult) {
               hasNext.value = queryResult.filmIds.length == queryRange.limit;
-              return Grid(
+              return QueryGrid(
                 queryResult.filmIds,
                 emptyMessage: 'No anime found',
                 padding: const EdgeInsets.only(bottom: 56),
