@@ -29,10 +29,7 @@ class TopBar extends HookConsumerWidget {
           if (constraints.maxWidth > 910) ...[
             Text(
               appName,
-              style: GoogleFonts.nunito(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-              ),
+              style: GoogleFonts.nunito(fontSize: 34),
             ),
             const SizedBox(width: 20),
           ],
@@ -122,20 +119,18 @@ class Actions extends HookConsumerWidget {
                   onPressed: onPressed,
                   child: const Text(
                     'Log In / Sign Up',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 );
         } else {
           return PopupMenuButton(
             child: short
                 ? null
-                : Text(
-                    username,
-                    style: GoogleFonts.nunito(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                    ),
+                : Text(username, style: const TextStyle(fontSize: 18)).padding(
+                    horizontal: 8,
+                    vertical: 6,
                   ),
+            tooltip: 'Account Actions',
             onSelected: (value) {
               switch (value) {
                 case 'logout':
