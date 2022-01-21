@@ -26,19 +26,26 @@ class TopBar extends HookConsumerWidget {
             filterQuality: FilterQuality.medium,
           ),
           const SizedBox(width: 20),
-          if (constraints.maxWidth > 910)
+          if (constraints.maxWidth > 910) ...[
             Text(
               appName,
-              style: GoogleFonts.nunito(fontSize: 34, color: Colors.black54),
+              style: GoogleFonts.nunito(
+                fontSize: 34,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          const Spacer(flex: 6),
-          constraints.maxWidth > 600
-              ? const Search().width(400)
-              : const Search().flexible(flex: 1000),
-          const Spacer(flex: 1),
+            const SizedBox(width: 20),
+          ],
+          const Search().expanded(),
+          const SizedBox(width: 20),
           constraints.maxWidth > 660
-              ? const Actions().alignment(Alignment.centerRight).width(150)
-              : const Actions(short: true).width(40),
+              ? const Actions(
+                  predictedWidth: 150,
+                ).alignment(Alignment.centerRight)
+              : const Actions(
+                  predictedWidth: 40,
+                  short: true,
+                ),
         ],
       )
           .padding(vertical: 10, horizontal: 20)
@@ -78,14 +85,19 @@ class Search extends HookConsumerWidget {
 
 class Actions extends HookConsumerWidget {
   final bool short;
-  const Actions({this.short = false, Key? key}) : super(key: key);
+  final double predictedWidth;
+  const Actions({
+    required this.predictedWidth,
+    this.short = false,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final username = ref.watch(usernameProvider);
 
     return username.when(
-      loading: () => const LinearProgressIndicator(),
+      loading: () => const LinearProgressIndicator().width(150),
       error: (err, stack) => Text('Error: $stack'),
       data: (username) {
         if (username == null) {
@@ -114,61 +126,58 @@ class Actions extends HookConsumerWidget {
                   ),
                 );
         } else {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!short)
-                Text(
-                  'Hi $username',
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                ).flexible(),
-              PopupMenuButton(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'logout':
-                      showDialog(
-                        context: context,
-                        builder: (context) => WarningDialog(
-                          title: 'Log Out',
-                          description: 'Are you sure?',
-                          onConfirm: () {
-                            ref.read(accountProvider.notifier).logout();
-                          },
-                        ),
-                      );
-                      break;
-                    case 'changeUsername':
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ChangeUsername(),
-                      );
-                      break;
-                    case 'changePassword':
-                      showDialog(
-                        context: context,
-                        builder: (context) => const ChangePassword(),
-                      );
-                      break;
-                    default:
-                      throw Error();
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    child: Text('Log Out'),
-                    value: 'logout',
+          return PopupMenuButton(
+            child: short
+                ? null
+                : Text(
+                    username,
+                    style: GoogleFonts.nunito(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const PopupMenuItem(
-                    child: Text('Change username'),
-                    value: 'changeUsername',
-                  ),
-                  const PopupMenuItem(
-                    child: Text('Change password'),
-                    value: 'changePassword',
-                  ),
-                ],
+            onSelected: (value) {
+              switch (value) {
+                case 'logout':
+                  showDialog(
+                    context: context,
+                    builder: (context) => WarningDialog(
+                      title: 'Log Out',
+                      description: 'Are you sure?',
+                      onConfirm: () {
+                        ref.read(accountProvider.notifier).logout();
+                      },
+                    ),
+                  );
+                  break;
+                case 'changeUsername':
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ChangeUsername(),
+                  );
+                  break;
+                case 'changePassword':
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ChangePassword(),
+                  );
+                  break;
+                default:
+                  throw Error();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                child: Text('Log Out'),
+                value: 'logout',
+              ),
+              const PopupMenuItem(
+                child: Text('Change username'),
+                value: 'changeUsername',
+              ),
+              const PopupMenuItem(
+                child: Text('Change password'),
+                value: 'changePassword',
               ),
             ],
           );
