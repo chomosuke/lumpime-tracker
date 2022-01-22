@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'layout.dart';
+import 'nav_bar.dart';
+import 'page_route.dart';
+import 'pages/index.dart';
+import 'top_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'index.dart';
 
 const appName = 'Lumpime Tracker';
 
@@ -27,7 +31,7 @@ class App extends HookConsumerWidget {
           onGenerateRoute: (settings) {
             if (settings.name == '/' || settings.name == null) {
               return MyPageRoute(
-                builder: (context) => const QueryPage(),
+                builder: (context) => const SearchPage(),
               );
             }
 

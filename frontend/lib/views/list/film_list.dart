@@ -1,65 +1,81 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
+import 'list_item.dart';
 import 'package:tuple/tuple.dart';
-import 'index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
-class ListGrid extends HookConsumerWidget {
-  final List<String> filmIds;
+class FilmList extends HookConsumerWidget {
+  final String name;
   final bool showEpisodeTracker;
-  final String emptyMessage;
-  final EdgeInsetsGeometry? padding;
-  const ListGrid(
-    this.filmIds, {
+  const FilmList({
+    required this.name,
     this.showEpisodeTracker = false,
-    this.emptyMessage = '',
-    this.padding,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var filmIds = this.filmIds;
+    final filmIds = ref.watch(filmIdListProvider(name))?.list;
     final query = ref.watch(queryProvider);
-    final filmIdsSnapshot = useFuture(filterViaQuery(filmIds, query));
-    if (filmIdsSnapshot.hasData) {
-      filmIds = filmIdsSnapshot.data!;
-    }
 
-    if (filmIds.isEmpty) {
-      return Center(
-        child: Text(emptyMessage),
-      );
-    }
+    final memorizedResult = useMemoized(
+      () => filterViaQuery(filmIds ?? [], query),
+      [filmIds, query],
+    );
+    final filteredFilmIdsSnapshot = useFuture(
+      memorizedResult,
+      preserveState: false,
+    );
 
     final controller = useScrollController();
 
-    const maxCrossAxisExtent = 182 * 2.0;
+    List<String>? filteredFilmIds;
+    if (filteredFilmIdsSnapshot.hasData) {
+      filteredFilmIds = filteredFilmIdsSnapshot.data!;
+    }
+
+    if (filmIds == null || filteredFilmIds == null) {
+      return const LinearProgressIndicator().width(500).center();
+    }
+
+    if (filmIds.isEmpty) {
+      return const Center(
+        child: Text('You don\'t have any anime in this list'),
+      );
+    }
+
+    if (filteredFilmIds.isEmpty) {
+      return const Center(
+        child: Text('No anime found'),
+      );
+    }
+
     return LayoutBuilder(
       builder: (context, constrains) => Scrollbar(
         controller: controller,
         isAlwaysShown: true,
-        child: GridView.builder(
-          controller: controller,
+        child: ReorderableListView.builder(
+          scrollController: controller,
           itemCount: filmIds.length,
-          padding: const EdgeInsets.all(30)
-              .add(padding ?? const EdgeInsets.all(0))
-              .add(EdgeInsets.symmetric(
-                horizontal: max((constrains.maxWidth - 1600) / 2, 0),
-              )),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: maxCrossAxisExtent,
-            childAspectRatio: 400 / 600,
-            crossAxisSpacing: 30,
-            mainAxisSpacing: 30,
+          padding: EdgeInsets.symmetric(
+            vertical: 30,
+            horizontal: max((constrains.maxWidth - 1600) / 2, 0),
           ),
-          itemBuilder: (context, index) => ListCard(
+          itemBuilder: (context, index) => ListItem(
+            key: ValueKey(filmIds[index]),
             filmId: filmIds[index],
             showEpisodeTracker: showEpisodeTracker,
           ),
+          onReorder: (oldIndex, newIndex) {
+            ref
+                .read(filmIdListProvider(name).notifier)!
+                .reorder(oldIndex, newIndex);
+          },
         ),
       ),
     );

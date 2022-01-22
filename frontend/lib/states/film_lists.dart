@@ -36,15 +36,13 @@ const listNames = [
   toWatch,
   watching,
   watched,
-  liked,
-  saved,
+  favorite,
 ];
 
 const toWatch = 'toWatch';
 const watched = 'watched';
 const watching = 'watching';
-const liked = 'liked';
-const saved = 'saved';
+const favorite = 'liked';
 
 class FilmIdList extends ChangeNotifier {
   final String key;

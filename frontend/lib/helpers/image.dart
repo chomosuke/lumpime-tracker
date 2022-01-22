@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class FilmImage extends HookConsumerWidget {
-  const FilmImage({
+class MImage extends HookConsumerWidget {
+  final double width;
+  final double height;
+  const MImage({
+    required this.width,
+    required this.height,
     Key? key,
     required this.imgUrl,
   }) : super(key: key);
@@ -16,19 +20,14 @@ class FilmImage extends HookConsumerWidget {
         ? const Text('No image')
             .center()
             .constrained(
-              width: 200,
-              height: 200,
+              width: width,
+              height: height,
             )
             .decorated(border: Border.all())
-            .center()
-            .constrained(
-              width: 400,
-              height: 400,
-            )
         : Image.network(
             imgUrl,
-            width: 400,
-            height: 400,
+            width: width,
+            height: height,
             filterQuality: FilterQuality.medium,
             fit: BoxFit.contain,
           );

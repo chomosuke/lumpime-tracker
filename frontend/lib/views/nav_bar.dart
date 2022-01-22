@@ -9,16 +9,14 @@ const listNameToIcon = <String, Icon>{
   toWatch: Icon(Icons.watch_later),
   watching: Icon(Icons.remove_red_eye),
   watched: Icon(Icons.done),
-  liked: Icon(Icons.thumb_up_alt),
-  saved: Icon(Icons.bookmark),
+  favorite: Icon(Icons.favorite),
 };
 
 const listNameToToolTip = <String, String>{
   toWatch: 'Watchlist',
   watching: 'Watching',
   watched: 'Completed',
-  liked: 'Liked',
-  saved: 'Bookmarked',
+  favorite: 'Favorite',
 };
 
 class NavBar extends HookConsumerWidget {

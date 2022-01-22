@@ -21,10 +21,12 @@ class FilmActions extends HookConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: listNames
-          .map<Widget>((listName) => FilmListButton(
-                listName: listName,
-                filmId: filmId,
-              ))
+          .map<Widget>(
+            (listName) => FilmListButton(
+              listName: listName,
+              filmId: filmId,
+            ),
+          )
           .toList(),
     );
   }
@@ -122,24 +124,13 @@ const listNameToIcons = <String, IconSwitch>{
       size: iconSize,
     ),
   ),
-  liked: IconSwitch(
+  favorite: IconSwitch(
     Icon(
-      Icons.thumb_up_alt,
+      Icons.favorite,
       size: iconSize,
     ),
     Icon(
-      Icons.thumb_up_alt_outlined,
-      color: Colors.black38,
-      size: iconSize,
-    ),
-  ),
-  saved: IconSwitch(
-    Icon(
-      Icons.bookmark,
-      size: iconSize,
-    ),
-    Icon(
-      Icons.bookmark_outline,
+      Icons.favorite_outline,
       color: Colors.black38,
       size: iconSize,
     ),

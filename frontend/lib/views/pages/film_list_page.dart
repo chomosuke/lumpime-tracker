@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
-import '../index.dart';
+import '../list/film_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:styled_widget/styled_widget.dart';
 
 class FilmListPage extends HookConsumerWidget {
   final String listName;
@@ -10,7 +9,6 @@ class FilmListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filmIdLists = ref.watch(filmIdListsProvider);
     final username = ref.watch(usernameProvider).value;
 
     if (username == null) {
@@ -19,12 +17,9 @@ class FilmListPage extends HookConsumerWidget {
       );
     }
 
-    return filmIdLists == null
-        ? const LinearProgressIndicator().width(500).center()
-        : ListGrid(
-            filmIdLists[listName]!.list,
-            showEpisodeTracker: listName == watching,
-            emptyMessage: 'You don\'t have any anime in this list',
-          );
+    return FilmList(
+      name: listName,
+      showEpisodeTracker: listName == watching,
+    );
   }
 }
