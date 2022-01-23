@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
-import '../list/film_list.dart';
+import 'film_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class FilmListPage extends HookConsumerWidget {

@@ -1,1 +1,1 @@
-export 'search_result.dart';
+export 'search_page.dart';

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'layout.dart';
 import 'nav_bar.dart';
 import 'page_route.dart';
-import 'pages/index.dart';
+import 'query/index.dart';
+import 'list/index.dart';
 import 'top_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -83,6 +83,9 @@ class FilmIdList extends ChangeNotifier {
 
   void reorder(int oldIndex, int newIndex) {
     final id = list.removeAt(oldIndex);
+    if (oldIndex < newIndex) {
+      newIndex--;
+    }
     list.insert(newIndex, id);
     http.filmListItemsPut(key, list);
     notifyListeners();
