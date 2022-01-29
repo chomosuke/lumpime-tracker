@@ -27,7 +27,7 @@ class SearchPage extends HookConsumerWidget {
               hasNext.value = queryResult.filmIds.length == queryRange.limit;
               return SearchGrid(
                 queryResult.filmIds,
-                padding: const EdgeInsets.only(bottom: 56, top: 64),
+                padding: const EdgeInsets.only(bottom: 56, top: 72),
               );
             }),
         Row(

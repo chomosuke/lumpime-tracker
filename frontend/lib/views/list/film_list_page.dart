@@ -20,7 +20,7 @@ class FilmListPage extends HookConsumerWidget {
     return FilmList(
       name: listName,
       showEpisodeTracker: listName == watching,
-      padding: const EdgeInsets.only(top: 64),
+      padding: const EdgeInsets.only(top: 72),
     );
   }
 }
