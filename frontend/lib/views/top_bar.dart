@@ -20,19 +20,24 @@ class TopBar extends HookConsumerWidget {
       builder: (context, constraints) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.network(
-            baseUrl.resolve('favicon.png').toString(),
-            height: 56,
-            filterQuality: FilterQuality.medium,
-          ),
-          const SizedBox(width: 20),
-          if (constraints.maxWidth > 910) ...[
-            Text(
-              appName,
-              style: GoogleFonts.nunito(fontSize: 34),
+          [
+            Image.network(
+              baseUrl.resolve('favicon.png').toString(),
+              height: 56,
+              filterQuality: FilterQuality.medium,
             ),
             const SizedBox(width: 20),
-          ],
+            if (constraints.maxWidth > 910) ...[
+              Text(
+                appName,
+                style: GoogleFonts.nunito(fontSize: 34),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ].toRow(mainAxisSize: MainAxisSize.min).ripple(radius: 200).gestures(
+                onTap: () =>
+                    Navigator.of(navigatorKey.currentContext!).pushNamed('/'),
+              ),
           const Search().expanded(),
           const SizedBox(width: 20),
           constraints.maxWidth > 660
