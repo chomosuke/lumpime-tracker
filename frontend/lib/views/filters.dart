@@ -1,5 +1,8 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:frontend/http/index.dart';
+import 'package:frontend/states/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -8,42 +11,95 @@ class Filters extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final query = ref.watch(queryProvider);
+
+    final meta = useFuture(metaGet());
+    if (!meta.hasData) {
+      return const LinearProgressIndicator().limitedBox(maxWidth: 500);
+    }
+
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Spacer(),
-        DropdownSearch.multiSelection(
-          mode: Mode.MENU,
-          dropdownSearchDecoration: const InputDecoration(
-            border: InputBorder.none,
-          ),
-        )
-            .decorated(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Genre',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5),
+            DropdownSearch<String>.multiSelection(
+              mode: Mode.MENU,
+              showClearButton: true,
+              showSearchBox: true,
+              items: meta.data!.genres,
+              onChanged: (value) => ref.read(queryProvider.notifier).state =
+                  Query(query.text, query.seasons, value),
+              dropdownSearchDecoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
+              ),
+              maxHeight: 1000,
             )
-            .elevation(
-              16,
-              borderRadius: BorderRadius.circular(10),
-            )
-            .flexible(flex: 6),
+                .decorated(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                )
+                .elevation(
+                  16,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+          ],
+        ).flexible(flex: 6),
         const Spacer(),
-        DropdownSearch.multiSelection(
-          mode: Mode.MENU,
-          dropdownSearchDecoration: const InputDecoration(
-            border: InputBorder.none,
-          ),
-        )
-            .decorated(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Season',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5),
+            DropdownSearch<int>.multiSelection(
+              mode: Mode.MENU,
+              showSelectedItems: true,
+              showClearButton: true,
+              items: List.generate(
+                meta.data!.newestSeason + 1,
+                (i) => i,
+              ).reversed.toList(),
+              itemAsString: (i) => i == null ? '' : intToSeason(i),
+              compareFn: (item, selectedItem) => item == selectedItem,
+              onChanged: (value) => ref.read(queryProvider.notifier).state =
+                  Query(query.text, value, query.genres),
+              dropdownSearchDecoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(10),
+              ),
+              maxHeight: 1000,
             )
-            .elevation(
-              16,
-              borderRadius: BorderRadius.circular(10),
-            )
-            .flexible(flex: 6),
+                .decorated(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                )
+                .elevation(
+                  16,
+                  borderRadius: BorderRadius.circular(10),
+                )
+          ],
+        ).flexible(flex: 6),
         const Spacer(),
       ],
-    ).padding(all: 15);
+    ).padding(all: 5);
   }
 }
