@@ -5,10 +5,12 @@ import 'package:styled_widget/styled_widget.dart';
 class Layout extends HookConsumerWidget {
   final Widget topBar;
   final Widget navBar;
+  final Widget filters;
   final Widget page;
   const Layout({
     required this.topBar,
     required this.navBar,
+    required this.filters,
     required this.page,
     Key? key,
   }) : super(key: key);
@@ -23,7 +25,12 @@ class Layout extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               navBar,
-              page.expanded(),
+              Stack(
+                children: [
+                  page,
+                  filters,
+                ],
+              ).expanded(),
             ],
           ).expanded(),
         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/views/filters.dart';
 import 'layout.dart';
 import 'nav_bar.dart';
 import 'page_route.dart';
@@ -26,6 +27,7 @@ class App extends HookConsumerWidget {
       home: Layout(
         topBar: const TopBar(),
         navBar: const NavBar(),
+        filters: const Filters(),
         page: Navigator(
           key: navigatorKey,
           initialRoute: '/',

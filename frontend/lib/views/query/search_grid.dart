@@ -4,10 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SearchResult extends HookConsumerWidget {
+class SearchGrid extends HookConsumerWidget {
   final List<String> filmIds;
   final EdgeInsetsGeometry? padding;
-  const SearchResult(
+  const SearchGrid(
     this.filmIds, {
     this.padding,
     Key? key,
@@ -26,9 +26,19 @@ class SearchResult extends HookConsumerWidget {
       const maxCrossAxisExtent = 200.0;
 
       final SliverGridDelegate delegate;
-      if (constraints.maxWidth < maxCrossAxisExtent * 3) {
+      if (constraints.maxWidth < 525) {
+        delegate = const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 2 / 3,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
+        );
+      } else if (constraints.maxWidth < 600) {
         delegate = const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
+          childAspectRatio: 2 / 3,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
         );
       } else {
         delegate = const SliverGridDelegateWithMaxCrossAxisExtent(

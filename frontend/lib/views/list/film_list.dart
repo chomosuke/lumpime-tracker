@@ -11,9 +11,11 @@ import 'package:styled_widget/styled_widget.dart';
 class FilmList extends HookConsumerWidget {
   final String name;
   final bool showEpisodeTracker;
+  final EdgeInsets padding;
   const FilmList({
     required this.name,
     this.showEpisodeTracker = false,
+    this.padding = const EdgeInsets.only(),
     Key? key,
   }) : super(key: key);
 
@@ -62,9 +64,10 @@ class FilmList extends HookConsumerWidget {
           scrollController: controller,
           itemCount: filmIds.length,
           padding: EdgeInsets.symmetric(
-            vertical: 30,
-            horizontal: max((constrains.maxWidth - 1600) / 2, 0),
-          ),
+                vertical: 30,
+                horizontal: max((constrains.maxWidth - 1600) / 2, 0),
+              ) +
+              padding,
           itemBuilder: (context, index) => ListItem(
             key: ValueKey(filmIds[index]),
             filmId: filmIds[index],

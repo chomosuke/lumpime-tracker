@@ -58,10 +58,11 @@ class Search extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
     void onSearch() {
+      final query = ref.read(queryProvider);
       ref.read(queryProvider.state).state = Query(
         controller.text,
-        [],
-        [],
+        query.seasons,
+        query.genres,
       );
       ref.read(queryRangeProvider.state).state = initQueryRange;
     }

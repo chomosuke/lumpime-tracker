@@ -20,10 +20,15 @@ class MImage extends HookConsumerWidget {
         ? const Text('No image')
             .center()
             .constrained(
+              width: width / 2,
+              height: height / 2,
+            )
+            .decorated(border: Border.all())
+            .center()
+            .constrained(
               width: width,
               height: height,
             )
-            .decorated(border: Border.all())
         : Image.network(
             imgUrl,
             width: width,

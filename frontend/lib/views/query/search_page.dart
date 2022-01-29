@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/states/index.dart';
-import 'search_result.dart';
+import 'search_grid.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -25,9 +25,9 @@ class SearchPage extends HookConsumerWidget {
             error: (error, stackTrace) => Text('Error: $stackTrace'),
             data: (queryResult) {
               hasNext.value = queryResult.filmIds.length == queryRange.limit;
-              return SearchResult(
+              return SearchGrid(
                 queryResult.filmIds,
-                padding: const EdgeInsets.only(bottom: 56),
+                padding: const EdgeInsets.only(bottom: 56, top: 64),
               );
             }),
         Row(

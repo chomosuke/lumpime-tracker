@@ -48,23 +48,24 @@ func main() {
 		panic(err)
 	}
 
-	if !*release {
-		config := cors.DefaultConfig()
-		config.AllowAllOrigins = true
-		config.AddAllowHeaders(auth.AuthHeader)
-		r.Use(cors.New(config))
-
-		r.Use(func(c *gin.Context) {
-			time.Sleep(500 * time.Millisecond)
-			c.Next()
-		})
-	} else {
+	if *release {
 		// redirect http
 		r.Use(func(c *gin.Context) {
 			if c.GetHeader("x-forwarded-proto") != "https" {
 				c.Redirect(http.StatusPermanentRedirect, "https://"+c.Request.Host+c.Request.URL.Path)
 				c.Abort()
 			}
+		})
+	} else {
+		config := cors.DefaultConfig()
+		config.AllowAllOrigins = true
+		config.AddAllowHeaders(auth.AuthHeader)
+		r.Use(cors.New(config))
+
+		// artificial delay
+		r.Use(func(c *gin.Context) {
+			time.Sleep(500 * time.Millisecond)
+			c.Next()
 		})
 	}
 
