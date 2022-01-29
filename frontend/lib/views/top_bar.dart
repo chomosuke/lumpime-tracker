@@ -4,6 +4,7 @@ import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
 import 'package:frontend/views/forms/change_password.dart';
 import 'package:frontend/views/forms/change_username.dart';
+import 'package:frontend/views/nav_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'forms/index.dart';
 import 'index.dart';
@@ -16,6 +17,7 @@ class TopBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(routeNameProvider.state);
     return LayoutBuilder(
       builder: (context, constraints) => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,9 +37,11 @@ class TopBar extends HookConsumerWidget {
               const SizedBox(width: 20),
             ],
           ].toRow(mainAxisSize: MainAxisSize.min).ripple(radius: 200).gestures(
-                onTap: () =>
-                    Navigator.of(navigatorKey.currentContext!).pushNamed('/'),
-              ),
+            onTap: () {
+              Navigator.of(navigatorKey.currentContext!).pushNamed('/');
+              selected.state = '/';
+            },
+          ),
           const Search().expanded(),
           const SizedBox(width: 20),
           constraints.maxWidth > 660

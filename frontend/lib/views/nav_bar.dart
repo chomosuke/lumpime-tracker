@@ -19,23 +19,25 @@ const listNameToToolTip = <String, String>{
   favorite: 'Favorite',
 };
 
+final routeNameProvider = StateProvider((ref) => '/');
+
 class NavBar extends HookConsumerWidget {
   const NavBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selected = useState('/');
+    final selected = ref.watch(routeNameProvider.state);
     return Column(
       children: [
         IconButton(
           iconSize: 40,
           onPressed: () {
             Navigator.of(navigatorKey.currentContext!).pushNamed('/');
-            selected.value = '/';
+            selected.state = '/';
             ref.read(queryRangeProvider.state).state = initQueryRange;
           },
           icon: const Icon(Icons.search),
-          color: selected.value == '/' ? null : Colors.black54,
+          color: selected.state == '/' ? null : Colors.black54,
           tooltip: 'Search',
         ),
         ...listNames
@@ -45,10 +47,10 @@ class NavBar extends HookConsumerWidget {
                 onPressed: () {
                   Navigator.of(navigatorKey.currentContext!)
                       .pushNamed('/$listName');
-                  selected.value = listName;
+                  selected.state = listName;
                 },
                 icon: listNameToIcon[listName]!,
-                color: selected.value == listName ? null : Colors.black54,
+                color: selected.state == listName ? null : Colors.black54,
                 tooltip: listNameToToolTip[listName],
               ),
             )
