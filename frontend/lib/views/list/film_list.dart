@@ -23,25 +23,43 @@ class FilmList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filmIds = ref.watch(filmIdListProvider(name))?.list;
     final query = ref.watch(queryProvider);
-
-    final memorizedResult = useMemoized(
-      () => filterViaQuery(filmIds ?? [], query),
-      [filmIds, query],
-    );
-    final filteredFilmIdsSnapshot = useFuture(
-      memorizedResult,
-      preserveState: false,
-    );
+    final noQuery =
+        query.genres.isEmpty && query.seasons.isEmpty && query.text.isEmpty;
 
     final controller = useScrollController();
 
-    List<String>? filteredFilmIds;
-    if (filteredFilmIdsSnapshot.hasData) {
-      filteredFilmIds = filteredFilmIdsSnapshot.data!;
+    final filmMap = useFuture(useMemoized<Future<Map<String, Film>>>(
+      () async {
+        final filmTuples = await Future.wait(
+          (filmIds ?? []).map(
+            (id) async => Tuple2<String, Film>(id, await filmGet(id)),
+          ),
+        );
+        return {for (var e in filmTuples) e.item1: e.item2};
+      },
+      [filmIds],
+    )).data;
+
+    final nullFilmMap = filmIds == null ||
+        filmMap == null ||
+        filmIds.any((id) => filmMap[id] == null);
+
+    if (filmIds == null || (nullFilmMap && !noQuery)) {
+      return const LinearProgressIndicator().width(500).center();
     }
 
-    if (filmIds == null || filteredFilmIds == null) {
-      return const LinearProgressIndicator().width(500).center();
+    final List<String> filteredFilmIds;
+    if (!noQuery) {
+      final filmTuples =
+          filmIds.map((id) => Tuple2<String, Film>(id, filmMap![id]!)).toList();
+
+      filteredFilmIds = filterViaQuery(
+        filmIds,
+        query,
+        filmTuples,
+      );
+    } else {
+      filteredFilmIds = filmIds;
     }
 
     if (filmIds.isEmpty) {
@@ -62,18 +80,20 @@ class FilmList extends HookConsumerWidget {
         isAlwaysShown: true,
         child: ReorderableListView.builder(
           scrollController: controller,
-          itemCount: filmIds.length,
+          itemCount: filteredFilmIds.length,
           padding: EdgeInsets.symmetric(
                 vertical: 30,
                 horizontal: max((constrains.maxWidth - 1600) / 2, 0),
               ) +
               padding,
           itemBuilder: (context, index) => ListItem(
-            key: ValueKey(filmIds[index]),
-            filmId: filmIds[index],
+            key: ValueKey(filteredFilmIds[index]),
+            filmId: filteredFilmIds[index],
             showEpisodeTracker: showEpisodeTracker,
           ),
-          onReorder: (oldIndex, newIndex) {
+          onReorder: (filteredOldIndex, filteredNewIndex) {
+            final oldIndex = filmIds.indexOf(filteredFilmIds[filteredOldIndex]);
+            final newIndex = filmIds.indexOf(filteredFilmIds[filteredNewIndex]);
             ref
                 .read(filmIdListProvider(name).notifier)!
                 .reorder(oldIndex, newIndex);
@@ -83,14 +103,12 @@ class FilmList extends HookConsumerWidget {
     );
   }
 
-  Future<List<String>> filterViaQuery(List<String> filmIds, Query query) async {
-    if (query.genres.isEmpty && query.seasons.isEmpty && query.text.isEmpty) {
-      return filmIds;
-    }
-
+  List<String> filterViaQuery(
+    List<String> filmIds,
+    Query query,
+    List<Tuple2<String, Film>> filmTuples,
+  ) {
     final result = <String>[];
-    final filmTuples = await Future.wait(
-        filmIds.map((id) async => Tuple2<String, Film>(id, await filmGet(id))));
     for (final filmTuple in filmTuples) {
       final film = filmTuple.item2;
       if (query.genres.isNotEmpty &&

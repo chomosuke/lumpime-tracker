@@ -13,7 +13,7 @@ class Filters extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(queryProvider);
 
-    final meta = useFuture(metaGet());
+    final meta = useFuture(useMemoized(metaGet));
     if (!meta.hasData) {
       return const LinearProgressIndicator().limitedBox(maxWidth: 500);
     }
@@ -41,6 +41,7 @@ class Filters extends HookConsumerWidget {
               items: meta.data!.genres,
               onChanged: (value) => ref.read(queryProvider.notifier).state =
                   Query(query.text, query.seasons, value),
+              selectedItems: query.genres,
               dropdownSearchDecoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
@@ -82,6 +83,7 @@ class Filters extends HookConsumerWidget {
               compareFn: (item, selectedItem) => item == selectedItem,
               onChanged: (value) => ref.read(queryProvider.notifier).state =
                   Query(query.text, value, query.genres),
+              selectedItems: query.seasons,
               dropdownSearchDecoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
