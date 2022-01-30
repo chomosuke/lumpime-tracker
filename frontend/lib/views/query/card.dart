@@ -81,6 +81,12 @@ class Overlay extends HookConsumerWidget {
       color: Colors.white54,
     );
 
+    const smallTitleTextStlye = TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.bold,
+      color: Colors.white60,
+    );
+
     const titleTextStyle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
@@ -88,7 +94,7 @@ class Overlay extends HookConsumerWidget {
     );
 
     final episodes = data.episodes == 0 ? '?' : data.episodes;
-    final firstSeason = data.firstSeason == '' ? '?' : data.firstSeason;
+    final firstSeason = data.seasonsName.isEmpty ? '?' : data.seasonsName[0];
 
     // status, first season, episodes,
     return Column(
@@ -101,13 +107,33 @@ class Overlay extends HookConsumerWidget {
         Text(
           data.englishName,
           textAlign: TextAlign.center,
-          style: smallTextStyle,
+          style: smallTitleTextStlye,
         ),
         const SizedBox(height: 5),
-        Text(
-          '$firstSeason | ${data.status} | $episodes eps',
-          textAlign: TextAlign.center,
-          style: smallTextStyle,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              firstSeason,
+              style: smallTextStyle,
+            ).ripple().gestures(
+              onTap: () {
+                final query = ref.read(queryProvider);
+                if (data.seasons.isNotEmpty &&
+                    !query.seasons.contains(data.seasons[0])) {
+                  ref.read(queryProvider.notifier).state = Query(
+                    query.text,
+                    query.seasons + [data.seasons[0]],
+                    query.genres,
+                  );
+                }
+              },
+            ),
+            Text(
+              '${data.status} | $episodes eps',
+              style: smallTextStyle,
+            ),
+          ],
         ),
         const SizedBox(height: 5),
         Wrap(
@@ -139,6 +165,7 @@ class Overlay extends HookConsumerWidget {
               .toList(),
         ),
         const Spacer(),
+        const SizedBox(height: 50),
       ],
     ).backgroundColor(const Color.fromRGBO(0, 0, 0, 0.64));
   }

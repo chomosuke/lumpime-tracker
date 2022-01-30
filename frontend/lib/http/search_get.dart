@@ -33,7 +33,6 @@ class Film {
   final int episodes;
   final List<int> seasons;
   final List<String> seasonsName;
-  final String firstSeason;
   final List<String> genres;
   final String status;
   Film._(
@@ -45,7 +44,6 @@ class Film {
     this.episodes,
     this.seasons,
     this.seasonsName,
-    this.firstSeason,
     this.genres,
     this.status,
   );
@@ -63,7 +61,6 @@ class Film {
       map['episodes'],
       seasons,
       seasonsName,
-      seasonsName.isEmpty ? '' : seasonsName[0],
       List.from(map['genres']),
       map['status'],
     );
