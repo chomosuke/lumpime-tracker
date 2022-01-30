@@ -404,7 +404,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: c302c29cad107870f1329c823e0287502788dc69
+      resolved-ref: "5644e6325ea53287e092e02f89591513bff2f3a0"
       url: "git://github.com/chomosuke/styled_widget.git"
     source: git
     version: "0.4.0+3"

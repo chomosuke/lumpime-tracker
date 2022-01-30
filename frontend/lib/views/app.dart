@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/measure_size.dart';
-import 'package:frontend/states/index.dart';
 import 'package:frontend/views/filters.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 import 'nav_bar.dart';
 import 'page_route.dart';
 import 'query/index.dart';
 import 'list/index.dart';
 import 'top_bar.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:styled_widget/styled_widget.dart';
 
 const appName = 'Lumpime Tracker';
 
