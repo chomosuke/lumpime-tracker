@@ -83,7 +83,7 @@ class FilmList extends HookConsumerWidget {
           itemCount: filteredFilmIds.length,
           padding: EdgeInsets.symmetric(
                 vertical: 30,
-                horizontal: max((constrains.maxWidth - 1600) / 2, 0),
+                horizontal: max((constrains.maxWidth - 1000) / 2, 0),
               ) +
               padding,
           itemBuilder: (context, index) => ListItem(
@@ -92,6 +92,9 @@ class FilmList extends HookConsumerWidget {
             showEpisodeTracker: showEpisodeTracker,
           ),
           onReorder: (filteredOldIndex, filteredNewIndex) {
+            if (filteredOldIndex < filteredNewIndex) {
+              filteredNewIndex--;
+            }
             final oldIndex = filmIds.indexOf(filteredFilmIds[filteredOldIndex]);
             final newIndex = filmIds.indexOf(filteredFilmIds[filteredNewIndex]);
             ref

@@ -5,7 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class FilmListPage extends HookConsumerWidget {
   final String listName;
-  const FilmListPage(this.listName, {Key? key}) : super(key: key);
+  final double topPadding;
+  const FilmListPage({required this.listName, this.topPadding = 0, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +22,7 @@ class FilmListPage extends HookConsumerWidget {
     return FilmList(
       name: listName,
       showEpisodeTracker: listName == watching,
-      padding: const EdgeInsets.only(top: 72),
+      padding: EdgeInsets.only(top: topPadding),
     );
   }
 }

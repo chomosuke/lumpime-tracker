@@ -6,7 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class SearchPage extends HookConsumerWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  final double topPadding;
+  const SearchPage({this.topPadding = 0, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +28,7 @@ class SearchPage extends HookConsumerWidget {
               hasNext.value = queryResult.filmIds.length == queryRange.limit;
               return SearchGrid(
                 queryResult.filmIds,
-                padding: const EdgeInsets.only(bottom: 56, top: 72),
+                padding: EdgeInsets.only(bottom: 56, top: topPadding),
               );
             }),
         Row(
