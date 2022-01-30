@@ -47,7 +47,7 @@ class SearchPage extends HookConsumerWidget {
                 'previous',
                 style: TextStyle(color: Colors.black),
               ),
-            ).width(85),
+            ).width(88),
             AnimatedSwitcher(
               child: Text('   $pageIndex   ', key: ValueKey(pageIndex)),
               duration: const Duration(milliseconds: 300),
@@ -66,7 +66,7 @@ class SearchPage extends HookConsumerWidget {
                 'next',
                 style: TextStyle(color: Colors.black),
               ),
-            ).width(85),
+            ).width(88),
           ],
         )
             .padding(all: 10)

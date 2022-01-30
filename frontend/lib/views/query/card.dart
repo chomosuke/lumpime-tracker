@@ -5,6 +5,9 @@ import 'package:frontend/http/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
+const cardWidth = 160.0;
+const cardHeight = 266.0;
+
 class Card extends HookConsumerWidget {
   final String filmId;
   Card({
@@ -40,8 +43,8 @@ class Card extends HookConsumerWidget {
         ],
       )
           .constrained(
-            width: 160,
-            height: 260,
+            width: cardWidth,
+            height: cardHeight,
           )
           .fittedBox();
     }

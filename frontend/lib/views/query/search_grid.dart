@@ -29,21 +29,21 @@ class SearchGrid extends HookConsumerWidget {
       if (constraints.maxWidth < 525) {
         delegate = const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 2 / 3,
+          childAspectRatio: cardWidth / cardHeight,
           crossAxisSpacing: 30,
           mainAxisSpacing: 30,
         );
       } else if (constraints.maxWidth < 600) {
         delegate = const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 2 / 3,
+          childAspectRatio: cardWidth / cardHeight,
           crossAxisSpacing: 30,
           mainAxisSpacing: 30,
         );
       } else {
         delegate = const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: maxCrossAxisExtent,
-          childAspectRatio: 2 / 3,
+          childAspectRatio: cardWidth / cardHeight,
           crossAxisSpacing: 30,
           mainAxisSpacing: 30,
         );
