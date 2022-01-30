@@ -88,50 +88,54 @@ class IconSwitch {
   Icon get(bool filled) => filled ? this.filled : unfilled;
 }
 
-const iconSize = 36.0;
+const iconSize = 24.0;
 
 const listNameToIcons = <String, IconSwitch>{
   toWatch: IconSwitch(
     Icon(
       Icons.watch_later,
+      color: Colors.white,
       size: iconSize,
     ),
     Icon(
       Icons.watch_later_outlined,
-      color: Colors.black38,
+      color: Colors.white38,
       size: iconSize,
     ),
   ),
   watching: IconSwitch(
     Icon(
       Icons.remove_red_eye,
+      color: Colors.white,
       size: iconSize,
     ),
     Icon(
       Icons.remove_red_eye_outlined,
-      color: Colors.black38,
+      color: Colors.white38,
       size: iconSize,
     ),
   ),
   watched: IconSwitch(
     Icon(
       Icons.done,
+      color: Colors.white,
       size: iconSize,
     ),
     Icon(
       Icons.done,
-      color: Colors.black38,
+      color: Colors.white38,
       size: iconSize,
     ),
   ),
   favorite: IconSwitch(
     Icon(
       Icons.favorite,
+      color: Colors.white,
       size: iconSize,
     ),
     Icon(
       Icons.favorite_outline,
-      color: Colors.black38,
+      color: Colors.white38,
       size: iconSize,
     ),
   ),

@@ -3,11 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/image.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
+import 'actions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 const cardWidth = 160.0;
-const cardHeight = 266.0;
+const cardHeight = 260.0;
 
 final hoverIdProvider = StateProvider<String?>((ref) => null);
 
@@ -49,7 +50,11 @@ class Card extends HookConsumerWidget {
               ),
             ],
           ),
-          if (overlay) Overlay(filmData),
+          if (overlay)
+            Overlay(
+              data: filmData,
+              filmId: filmId,
+            ),
         ],
       )
           .constrained(
@@ -71,7 +76,12 @@ class Card extends HookConsumerWidget {
 
 class Overlay extends HookConsumerWidget {
   final Film data;
-  const Overlay(this.data, {Key? key}) : super(key: key);
+  final String filmId;
+  const Overlay({
+    required this.data,
+    required this.filmId,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -165,6 +175,9 @@ class Overlay extends HookConsumerWidget {
               .toList(),
         ),
         const Spacer(),
+        FilmActions(
+          filmId: filmId,
+        ),
         const SizedBox(height: 50),
       ],
     ).backgroundColor(const Color.fromRGBO(0, 0, 0, 0.64));
