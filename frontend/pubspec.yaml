@@ -21,7 +21,7 @@ dependencies:
   styled_widget:
     git:
       url: git://github.com/chomosuke/styled_widget.git
-      ref: addLimited
+      ref: master
   cupertino_icons: ^1.0.2
   tuple: ^2.0.0
   dropdown_search: ^2.0.1

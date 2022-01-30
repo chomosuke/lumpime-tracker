@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:frontend/helpers/measure_size.dart';
 import 'package:frontend/states/index.dart';
 import 'package:frontend/views/filters.dart';
 
@@ -22,14 +23,16 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final filterHeight = useState(0.0);
+
     final navigator = Navigator(
       key: navigatorKey,
       initialRoute: '/',
       onGenerateRoute: (settings) {
         if (settings.name == '/' || settings.name == null) {
           return MyPageRoute(
-            builder: (context) => const SearchPage(
-              topPadding: 72,
+            builder: (context) => SearchPage(
+              topPadding: filterHeight.value,
             ),
           );
         }
@@ -40,7 +43,7 @@ class App extends HookConsumerWidget {
           return MyPageRoute(
             builder: (context) => FilmListPage(
               listName: uri.pathSegments[0],
-              topPadding: 72,
+              topPadding: filterHeight.value,
             ),
           );
         }
@@ -52,25 +55,26 @@ class App extends HookConsumerWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: Material(
-        child: Column(
-          children: [
-            const TopBar(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const NavBar(),
-                Stack(
-                  children: [
-                    navigator,
-                    const Filters(),
-                  ],
-                ).expanded(),
-              ],
-            ).expanded(),
-          ],
-        ),
-      ),
+      home: Column(
+        children: [
+          const TopBar(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const NavBar(),
+              Stack(
+                children: [
+                  navigator,
+                  MeasureSize(
+                    onChange: (size) => filterHeight.value = size.height,
+                    child: const Filters(),
+                  ),
+                ],
+              ).expanded(),
+            ],
+          ).expanded(),
+        ],
+      ).material(),
     );
   }
 }

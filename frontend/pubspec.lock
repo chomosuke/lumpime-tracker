@@ -403,8 +403,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: addLimited
-      resolved-ref: "65cd7ad46618dc8c7527a526653a71125949a9b0"
+      ref: master
+      resolved-ref: c302c29cad107870f1329c823e0287502788dc69
       url: "git://github.com/chomosuke/styled_widget.git"
     source: git
     version: "0.4.0+3"
