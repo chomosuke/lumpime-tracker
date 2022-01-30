@@ -76,15 +76,15 @@ class Overlay extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const smallTextStyle = TextStyle(
-      fontSize: 10,
+      fontSize: 11,
       fontWeight: FontWeight.bold,
       color: Colors.white54,
     );
 
     const titleTextStyle = TextStyle(
-      fontSize: 15,
+      fontSize: 14,
       fontWeight: FontWeight.bold,
-      color: Colors.white,
+      color: Colors.white70,
     );
 
     final episodes = data.episodes == 0 ? '?' : data.episodes;
@@ -94,9 +94,14 @@ class Overlay extends HookConsumerWidget {
     return Column(
       children: [
         Text(
-          data.englishName,
+          data.name,
           textAlign: TextAlign.center,
           style: titleTextStyle,
+        ),
+        Text(
+          data.englishName,
+          textAlign: TextAlign.center,
+          style: smallTextStyle,
         ),
         const SizedBox(height: 5),
         Text(
@@ -135,6 +140,6 @@ class Overlay extends HookConsumerWidget {
         ),
         const Spacer(),
       ],
-    ).backgroundColor(Colors.black54);
+    ).backgroundColor(const Color.fromRGBO(0, 0, 0, 0.64));
   }
 }
