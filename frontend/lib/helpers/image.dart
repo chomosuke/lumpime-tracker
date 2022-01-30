@@ -16,25 +16,24 @@ class MImage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return imgUrl == ''
-        ? const Text('No image')
-            .center()
-            .constrained(
-              width: width / 2,
-              height: height / 2,
-            )
-            .decorated(border: Border.all())
-            .center()
-            .constrained(
-              width: width,
-              height: height,
-            )
-        : Image.network(
-            imgUrl,
+    return Image.network(
+      imgUrl,
+      errorBuilder: (context, error, stackTrace) => const Text('No image')
+          .center()
+          .constrained(
+            width: width / 2,
+            height: height / 2,
+          )
+          .decorated(border: Border.all())
+          .center()
+          .constrained(
             width: width,
             height: height,
-            filterQuality: FilterQuality.medium,
-            fit: BoxFit.contain,
-          );
+          ),
+      width: width,
+      height: height,
+      filterQuality: FilterQuality.medium,
+      fit: BoxFit.contain,
+    );
   }
 }
