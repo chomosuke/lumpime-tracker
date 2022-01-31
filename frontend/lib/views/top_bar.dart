@@ -103,6 +103,9 @@ class Actions extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final username = ref.watch(usernameProvider);
 
+    // cache film list
+    final _ = ref.read(filmIdListsProvider);
+
     return username.when(
       loading: () => const LinearProgressIndicator().width(150),
       error: (err, stack) => Text('Error: $stack'),
