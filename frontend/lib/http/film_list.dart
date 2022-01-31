@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
-
 import 'index.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
@@ -38,17 +36,12 @@ Future<void> filmListDelete(String key) async {
   }
 }
 
-Future<void> previousFuture = Future.value();
-
 Future<void> filmListItemPost(String key, String filmId) async {
-  await previousFuture;
-  final future = http.post(
+  final res = await http.post(
     apiUrl.resolve('user/filmList/item/$key'),
     headers: await jsonAuthHeader(),
     body: filmId,
   );
-  previousFuture = future;
-  final res = await future;
   if (res.statusCode != StatusCode.OK) {
     throw Error();
   }
@@ -80,14 +73,21 @@ Future<void> filmListItemsPut(String key, List<String> ids) async {
 }
 
 Future<void> filmListItemDelete(String key, String filmId) async {
-  await previousFuture;
-  final future = http.delete(
+  final res = await http.delete(
     apiUrl.resolve('user/filmList/item/$key/$filmId'),
     headers: await authHeader(),
   );
-  previousFuture = future;
-  final res = await future;
   if (res.statusCode != StatusCode.OK) {
     throw Error();
   }
+}
+
+Future<void> _currentFuture = Future.value();
+Future<void> addToQueue(Future<void> Function() f) async {
+  final previousFuture = _currentFuture;
+  _currentFuture = (() async {
+    await previousFuture;
+    await f();
+  })();
+  await _currentFuture;
 }

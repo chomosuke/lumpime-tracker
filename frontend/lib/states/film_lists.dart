@@ -60,7 +60,7 @@ class FilmIdList extends ChangeNotifier {
   }
 
   void add(String filmId) {
-    http.filmListItemPost(key, filmId);
+    http.addToQueue(() => http.filmListItemPost(key, filmId));
     list.add(filmId);
     _set.add(filmId);
     notifyListeners();
@@ -68,7 +68,7 @@ class FilmIdList extends ChangeNotifier {
 
   void remove(String filmId) {
     if (contains(filmId)) {
-      http.filmListItemDelete(key, filmId);
+      http.addToQueue(() => http.filmListItemDelete(key, filmId));
       list.remove(filmId);
       _set.remove(filmId);
       notifyListeners();
@@ -76,7 +76,7 @@ class FilmIdList extends ChangeNotifier {
   }
 
   void removeAt(int i) {
-    http.filmListItemDelete(key, list[i]);
+    http.addToQueue(() => http.filmListItemDelete(key, list[i]));
     _set.remove(list.removeAt(i));
     notifyListeners();
   }
@@ -84,7 +84,7 @@ class FilmIdList extends ChangeNotifier {
   void reorder(int oldIndex, int newIndex) {
     final id = list.removeAt(oldIndex);
     list.insert(newIndex, id);
-    http.filmListItemsPut(key, list);
+    http.addToQueue(() => http.filmListItemsPut(key, list));
     notifyListeners();
   }
 
