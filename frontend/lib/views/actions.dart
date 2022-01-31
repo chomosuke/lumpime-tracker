@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/states/index.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 class FilmActions extends HookConsumerWidget {
   final String filmId;
-  const FilmActions({required this.filmId, Key? key}) : super(key: key);
+  final FilmActionStyle style;
+  const FilmActions({
+    Key? key,
+    required this.filmId,
+    required this.style,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,6 +31,7 @@ class FilmActions extends HookConsumerWidget {
             (listName) => FilmListButton(
               listName: listName,
               filmId: filmId,
+              style: style,
             ),
           )
           .toList(),
@@ -35,10 +42,12 @@ class FilmActions extends HookConsumerWidget {
 class FilmListButton extends HookConsumerWidget {
   final String listName;
   final String filmId;
+  final FilmActionStyle style;
   const FilmListButton({
+    Key? key,
     required this.listName,
     required this.filmId,
-    Key? key,
+    required this.style,
   }) : super(key: key);
 
   @override
@@ -69,8 +78,16 @@ class FilmListButton extends HookConsumerWidget {
         }
       },
       child: AnimatedCrossFade(
-        firstChild: icons.filled,
-        secondChild: icons.unfilled,
+        firstChild: Icon(
+          icons.item1,
+          color: style.unfilledColor,
+          size: style.iconSize,
+        ),
+        secondChild: Icon(
+          icons.item2,
+          color: style.filledColor,
+          size: style.iconSize,
+        ),
         crossFadeState: filmIdList.contains(filmId)
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
@@ -80,63 +97,32 @@ class FilmListButton extends HookConsumerWidget {
   }
 }
 
-class IconSwitch {
-  final Icon filled;
-  final Icon unfilled;
-
-  const IconSwitch(this.filled, this.unfilled);
-  Icon get(bool filled) => filled ? this.filled : unfilled;
+class FilmActionStyle {
+  final double iconSize;
+  final Color filledColor;
+  final Color unfilledColor;
+  const FilmActionStyle({
+    required this.iconSize,
+    required this.filledColor,
+    required this.unfilledColor,
+  });
 }
 
-const iconSize = 24.0;
-
-const listNameToIcons = <String, IconSwitch>{
-  toWatch: IconSwitch(
-    Icon(
-      Icons.watch_later,
-      color: Colors.white,
-      size: iconSize,
-    ),
-    Icon(
-      Icons.watch_later_outlined,
-      color: Colors.white38,
-      size: iconSize,
-    ),
+const listNameToIcons = <String, Tuple2<IconData, IconData>>{
+  toWatch: Tuple2(
+    Icons.watch_later,
+    Icons.watch_later_outlined,
   ),
-  watching: IconSwitch(
-    Icon(
-      Icons.remove_red_eye,
-      color: Colors.white,
-      size: iconSize,
-    ),
-    Icon(
-      Icons.remove_red_eye_outlined,
-      color: Colors.white38,
-      size: iconSize,
-    ),
+  watching: Tuple2(
+    Icons.remove_red_eye,
+    Icons.remove_red_eye_outlined,
   ),
-  watched: IconSwitch(
-    Icon(
-      Icons.done,
-      color: Colors.white,
-      size: iconSize,
-    ),
-    Icon(
-      Icons.done,
-      color: Colors.white38,
-      size: iconSize,
-    ),
+  watched: Tuple2(
+    Icons.done,
+    Icons.done,
   ),
-  favorite: IconSwitch(
-    Icon(
-      Icons.favorite,
-      color: Colors.white,
-      size: iconSize,
-    ),
-    Icon(
-      Icons.favorite_outline,
-      color: Colors.white38,
-      size: iconSize,
-    ),
+  favorite: Tuple2(
+    Icons.favorite,
+    Icons.favorite_outline,
   ),
 };

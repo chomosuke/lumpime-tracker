@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/image.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
-import 'actions.dart';
+import '../actions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -177,6 +177,11 @@ class Overlay extends HookConsumerWidget {
         const Spacer(),
         FilmActions(
           filmId: filmId,
+          style: const FilmActionStyle(
+            iconSize: 24,
+            filledColor: Colors.white38,
+            unfilledColor: Colors.white,
+          ),
         ),
         const SizedBox(height: 50),
       ],

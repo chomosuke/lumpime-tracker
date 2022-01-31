@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/image.dart';
 import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
+import 'package:frontend/views/actions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -78,7 +79,7 @@ class ListItem extends HookConsumerWidget {
             ' | ${filmData.status} | $episodes eps',
             style: smallTextStyle,
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 4),
           ...filmData.genres
               .map<Widget>(
                 (genre) => Text(genre, style: smallTextStyle)
@@ -102,6 +103,15 @@ class ListItem extends HookConsumerWidget {
                 ).padding(horizontal: 2),
               )
               .toList(),
+          const SizedBox(width: 4),
+          FilmActions(
+            filmId: filmId,
+            style: const FilmActionStyle(
+              iconSize: 20,
+              filledColor: Colors.black38,
+              unfilledColor: Colors.black,
+            ),
+          ),
         ].toRow(),
       ].toColumn(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
