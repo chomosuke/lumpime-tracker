@@ -147,8 +147,8 @@ class Overlay extends HookConsumerWidget {
         ),
         const SizedBox(height: 5),
         Wrap(
-          spacing: 2,
-          runSpacing: 2,
+          spacing: 4,
+          runSpacing: 4,
           alignment: WrapAlignment.center,
           children: data.genres
               .map<Widget>(
@@ -156,7 +156,7 @@ class Overlay extends HookConsumerWidget {
                     .padding(all: 2)
                     .decorated(
                       border: Border.all(color: Colors.white54),
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(4),
                     )
                     .ripple()
                     .gestures(
