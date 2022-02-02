@@ -51,75 +51,80 @@ class ListItem extends HookConsumerWidget {
         filmData.seasonsName.isEmpty ? '?' : filmData.seasonsName[0];
     return [
       MImage(
-        width: 40,
-        height: 60,
+        width: 80,
+        height: 100,
         imgUrl: filmData.imgUrl,
       ),
       const SizedBox(width: 5),
       [
         Text(filmData.name, style: titleTextStyle),
-        [
-          Text(
-            firstSeason,
-            style: smallTextStyle,
-          ).ripple().gestures(
-            onTap: () {
-              final query = ref.read(queryProvider);
-              if (filmData.seasons.isNotEmpty &&
-                  !query.seasons.contains(filmData.seasons[0])) {
-                ref.read(queryProvider.notifier).state = Query(
-                  query.text,
-                  query.seasons + [filmData.seasons[0]],
-                  query.genres,
-                );
-              }
-            },
-          ),
-          Text(
-            ' | ${filmData.status} | $episodes eps',
-            style: smallTextStyle,
-          ),
-          const SizedBox(width: 4),
-          ...filmData.genres
-              .map<Widget>(
-                (genre) => Text(genre, style: smallTextStyle)
-                    .padding(all: 2)
-                    .decorated(
-                      border: Border.all(color: Colors.black54),
-                      borderRadius: BorderRadius.circular(4),
-                    )
-                    .ripple()
-                    .gestures(
-                  onTap: () {
-                    final query = ref.read(queryProvider);
-                    if (!query.genres.contains(genre)) {
-                      ref.read(queryProvider.notifier).state = Query(
-                        query.text,
-                        query.seasons,
-                        query.genres + [genre],
-                      );
-                    }
-                  },
-                ).padding(horizontal: 2),
-              )
-              .toList(),
-          const SizedBox(width: 4),
-          FilmActions(
-            filmId: filmId,
-            style: const FilmActionStyle(
-              iconSize: 20,
-              filledColor: Colors.black38,
-              unfilledColor: Colors.black,
+        Wrap(
+          direction: Axis.horizontal,
+          children: [
+            Text(
+              firstSeason,
+              style: smallTextStyle,
+            ).ripple().gestures(
+              onTap: () {
+                final query = ref.read(queryProvider);
+                if (filmData.seasons.isNotEmpty &&
+                    !query.seasons.contains(filmData.seasons[0])) {
+                  ref.read(queryProvider.notifier).state = Query(
+                    query.text,
+                    query.seasons + [filmData.seasons[0]],
+                    query.genres,
+                  );
+                }
+              },
             ),
-          ),
-        ].toRow(),
-      ].toColumn(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-      ),
+            Text(
+              ' | ${filmData.status} | $episodes eps',
+              style: smallTextStyle,
+            ),
+            const SizedBox(width: 4),
+            ...filmData.genres
+                .map<Widget>(
+                  (genre) => Text(genre, style: smallTextStyle)
+                      .padding(all: 2)
+                      .decorated(
+                        border: Border.all(color: Colors.black54),
+                        borderRadius: BorderRadius.circular(4),
+                      )
+                      .ripple()
+                      .gestures(
+                    onTap: () {
+                      final query = ref.read(queryProvider);
+                      if (!query.genres.contains(genre)) {
+                        ref.read(queryProvider.notifier).state = Query(
+                          query.text,
+                          query.seasons,
+                          query.genres + [genre],
+                        );
+                      }
+                    },
+                  ).padding(horizontal: 2),
+                )
+                .toList(),
+            const SizedBox(width: 4),
+            FilmActions(
+              filmId: filmId,
+              style: const FilmActionStyle(
+                iconSize: 20,
+                filledColor: Colors.black38,
+                unfilledColor: Colors.black,
+              ),
+            ).width(80),
+          ],
+        ),
+      ]
+          .toColumn(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+          )
+          .flexible(),
     ]
         .toRow(crossAxisAlignment: CrossAxisAlignment.stretch)
-        .height(60)
+        .height(100)
         .padding(all: 8);
   }
 }
