@@ -25,27 +25,30 @@ class SearchGrid extends HookConsumerWidget {
     return LayoutBuilder(builder: (context, constraints) {
       const maxCrossAxisExtent = 200.0;
 
+      final spacing =
+          constraints.maxWidth < 500 ? 30 / 525 * constraints.maxWidth : 30.0;
+
       final SliverGridDelegate delegate;
       if (constraints.maxWidth < 525) {
-        delegate = const SliverGridDelegateWithFixedCrossAxisCount(
+        delegate = SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: cardWidth / cardHeight,
-          crossAxisSpacing: 30,
-          mainAxisSpacing: 30,
+          crossAxisSpacing: spacing,
+          mainAxisSpacing: spacing,
         );
       } else if (constraints.maxWidth < 600) {
-        delegate = const SliverGridDelegateWithFixedCrossAxisCount(
+        delegate = SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: cardWidth / cardHeight,
-          crossAxisSpacing: 30,
-          mainAxisSpacing: 30,
+          crossAxisSpacing: spacing,
+          mainAxisSpacing: spacing,
         );
       } else {
-        delegate = const SliverGridDelegateWithMaxCrossAxisExtent(
+        delegate = SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: maxCrossAxisExtent,
           childAspectRatio: cardWidth / cardHeight,
-          crossAxisSpacing: 30,
-          mainAxisSpacing: 30,
+          crossAxisSpacing: spacing,
+          mainAxisSpacing: spacing,
         );
       }
 
@@ -55,7 +58,7 @@ class SearchGrid extends HookConsumerWidget {
         child: GridView.builder(
           controller: controller,
           itemCount: filmIds.length,
-          padding: const EdgeInsets.all(30)
+          padding: EdgeInsets.all(spacing)
               .add(padding ?? const EdgeInsets.all(0))
               .add(EdgeInsets.symmetric(
                 horizontal: max((constraints.maxWidth - 1600) / 2, 0),

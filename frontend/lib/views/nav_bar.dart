@@ -27,10 +27,12 @@ class NavBar extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(routeNameProvider.state);
+    final width = MediaQuery.of(context).size.width;
+    final iconSize = width < 450 ? 40 / 450 * width : 40.0;
     return Column(
       children: [
         IconButton(
-          iconSize: 40,
+          iconSize: iconSize,
           onPressed: () {
             Navigator.of(navigatorKey.currentContext!).pushNamed('/');
             selected.state = '/';
@@ -43,7 +45,7 @@ class NavBar extends HookConsumerWidget {
         ...listNames
             .map<Widget>(
               (listName) => IconButton(
-                iconSize: 40,
+                iconSize: iconSize,
                 onPressed: () {
                   Navigator.of(navigatorKey.currentContext!)
                       .pushNamed('/$listName');

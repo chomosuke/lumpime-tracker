@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 const cardWidth = 160.0;
-const cardHeight = 260.0;
+const cardHeight = 262.0;
 
 final hoverIdProvider = StateProvider<String?>((ref) => null);
 

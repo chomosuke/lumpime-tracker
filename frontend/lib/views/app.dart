@@ -49,31 +49,35 @@ class App extends HookConsumerWidget {
       },
     );
 
-    return MaterialApp(
-      title: appName,
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+    final home = Column(
+      children: [
+        const TopBar(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const NavBar(),
+            Stack(
+              children: [
+                navigator,
+                MeasureSize(
+                  onChange: (size) => filterHeight.value = size.height,
+                  child: const Filters(),
+                ),
+              ],
+            ).expanded(),
+          ],
+        ).expanded(),
+      ],
+    ).material();
+
+    return LayoutBuilder(
+      builder: (context, constraints) => MaterialApp(
+        title: appName,
+        theme: ThemeData(
+          primarySwatch: Colors.lightBlue,
+        ),
+        home: home,
       ),
-      home: Column(
-        children: [
-          const TopBar(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const NavBar(),
-              Stack(
-                children: [
-                  navigator,
-                  MeasureSize(
-                    onChange: (size) => filterHeight.value = size.height,
-                    child: const Filters(),
-                  ),
-                ],
-              ).expanded(),
-            ],
-          ).expanded(),
-        ],
-      ).material(),
     );
   }
 }
