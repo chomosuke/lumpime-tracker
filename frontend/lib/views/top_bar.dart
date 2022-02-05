@@ -77,6 +77,10 @@ class Search extends HookConsumerWidget {
       ref.read(queryRangeProvider.state).state = initQueryRange;
     }
 
+    if ('' == ref.watch(queryProvider).text) {
+      controller.clear();
+    }
+
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -87,6 +91,7 @@ class Search extends HookConsumerWidget {
         ),
       ),
       onSubmitted: (value) => onSearch(),
+      onEditingComplete: () => onSearch(),
     );
   }
 }
