@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/header_height_hook.dart';
 import 'package:frontend/helpers/measure_size.dart';
-import 'package:frontend/states/index.dart';
 import 'search_grid.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -14,8 +13,6 @@ class SearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final queryResult = ref.watch(queryResultProvider);
-
     final headerInnerHeight = useState(0.0);
 
     final controller = useScrollController();
@@ -26,18 +23,10 @@ class SearchPage extends HookConsumerWidget {
       builder: (context, constraints) => Stack(
         alignment: Alignment.topLeft,
         children: [
-          queryResult.when(
-              loading: () =>
-                  const LinearProgressIndicator().width(500).center(),
-              error: (error, stackTrace) => Text('Error: $stackTrace'),
-              data: (queryResult) {
-                return SearchGrid(
-                  queryResult.filmIds,
-                  controller: controller,
-                  padding:
-                      EdgeInsets.only(bottom: 56, top: headerInnerHeight.value),
-                );
-              }),
+          SearchGrid(
+            controller: controller,
+            padding: EdgeInsets.only(bottom: 56, top: headerInnerHeight.value),
+          ),
           if (header != null)
             MeasureSize(
               onChange: (size) => headerInnerHeight.value = size.height,

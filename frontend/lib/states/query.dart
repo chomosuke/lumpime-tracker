@@ -6,22 +6,11 @@ final queryProvider = StateProvider<Query>(
   (ref) => initQuery,
 );
 
-final queryResultProvider = FutureProvider<QueryResult>((ref) async {
+final queryResultProvider =
+    FutureProvider.family<QueryResult, int>((ref, page) async {
   final query = ref.watch(queryProvider);
-  final queryRange = ref.watch(queryRangeProvider);
-  return QueryResult.get(query, queryRange);
+  return QueryResult.get(query, page * 100, 100);
 });
-
-const initQueryRange = QueryRange(0, 50000);
-final queryRangeProvider = StateProvider(
-  (ref) => initQueryRange,
-);
-
-class QueryRange {
-  final int start;
-  final int limit;
-  const QueryRange(this.start, this.limit);
-}
 
 class Query {
   final String text;
@@ -35,13 +24,13 @@ class Query {
 class QueryResult {
   final List<String> filmIds;
   QueryResult._(this.filmIds);
-  static Future<QueryResult> get(Query query, QueryRange queryRange) async {
+  static Future<QueryResult> get(Query query, start, limit) async {
     return QueryResult._(await http.query(
       query.text,
       query.seasons,
       query.genres,
-      queryRange.start,
-      queryRange.limit,
+      start,
+      limit,
     ));
   }
 }

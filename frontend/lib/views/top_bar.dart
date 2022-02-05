@@ -39,7 +39,6 @@ class TopBar extends HookConsumerWidget {
           ].toRow(mainAxisSize: MainAxisSize.min).ripple(radius: 200).gestures(
             onTap: () {
               Navigator.of(navigatorKey.currentContext!).pushNamed('/');
-              ref.read(queryRangeProvider.state).state = initQueryRange;
               selected.state = '/';
             },
           ),
@@ -74,7 +73,6 @@ class Search extends HookConsumerWidget {
         query.seasons,
         query.genres,
       );
-      ref.read(queryRangeProvider.state).state = initQueryRange;
     }
 
     if (ref.watch(queryProvider).isEmpty) {

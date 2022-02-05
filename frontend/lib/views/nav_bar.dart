@@ -36,7 +36,6 @@ class NavBar extends HookConsumerWidget {
           onPressed: () {
             Navigator.of(navigatorKey.currentContext!).pushNamed('/');
             selected.state = '/';
-            ref.read(queryRangeProvider.state).state = initQueryRange;
           },
           icon: const Icon(Icons.search),
           color: selected.state == '/' ? null : Colors.black54,
