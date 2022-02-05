@@ -20,6 +20,13 @@ class Filters extends HookConsumerWidget {
       return const LinearProgressIndicator().limitedBox(maxWidth: 500);
     }
 
+    final dropdownDecoration = InputDecoration(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      contentPadding: const EdgeInsets.all(10),
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = Row(
@@ -49,20 +56,9 @@ class Filters extends HookConsumerWidget {
                   onChanged: (value) => ref.read(queryProvider.notifier).state =
                       Query(query.text, query.seasons, value),
                   selectedItems: query.genres,
-                  dropdownSearchDecoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(10),
-                  ),
+                  dropdownSearchDecoration: dropdownDecoration,
                   maxHeight: min(constraints.maxHeight - 100, 1000),
-                )
-                    .decorated(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    )
-                    .elevation(
-                      16,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                ),
               ],
             ).flexible(flex: 6),
             const Spacer(),
@@ -93,25 +89,14 @@ class Filters extends HookConsumerWidget {
                   onChanged: (value) => ref.read(queryProvider.notifier).state =
                       Query(query.text, value, query.genres),
                   selectedItems: query.seasons,
-                  dropdownSearchDecoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(10),
-                  ),
+                  dropdownSearchDecoration: dropdownDecoration,
                   maxHeight: min(constraints.maxHeight - 100, 1000),
-                )
-                    .decorated(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    )
-                    .elevation(
-                      16,
-                      borderRadius: BorderRadius.circular(10),
-                    )
+                ),
               ],
             ).flexible(flex: 6),
             const Spacer(),
           ],
-        ).padding(all: 5);
+        ).padding(all: 5).backgroundColor(Colors.white);
         return constraints.maxWidth > 500 ? w : w.width(500).fittedBox();
       },
     );

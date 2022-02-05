@@ -23,8 +23,6 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filterHeight = useState(0.0);
-
     final navigator = Navigator(
       key: navigatorKey,
       initialRoute: '/',
@@ -34,8 +32,8 @@ class App extends HookConsumerWidget {
         }
         if (settings.name == '/' || settings.name == null) {
           return MyPageRoute(
-            builder: (context) => SearchPage(
-              topPadding: filterHeight.value,
+            builder: (context) => const SearchPage(
+              header: Filters(),
             ),
           );
         }
@@ -45,8 +43,8 @@ class App extends HookConsumerWidget {
         if (uri.pathSegments.length == 1) {
           return MyPageRoute(
             builder: (context) => FilmListPage(
+              header: const Filters(),
               listName: uri.pathSegments[0],
-              topPadding: filterHeight.value,
             ),
           );
         }
@@ -60,15 +58,7 @@ class App extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const NavBar(),
-            Stack(
-              children: [
-                navigator,
-                MeasureSize(
-                  onChange: (size) => filterHeight.value = size.height,
-                  child: const Filters(),
-                ),
-              ],
-            ).expanded(),
+            navigator.expanded(),
           ],
         ).expanded(),
       ],

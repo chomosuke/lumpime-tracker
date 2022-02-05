@@ -7,16 +7,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class SearchGrid extends HookConsumerWidget {
   final List<String> filmIds;
   final EdgeInsetsGeometry? padding;
+  final ScrollController controller;
   const SearchGrid(
     this.filmIds, {
+    required this.controller,
     this.padding,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useScrollController();
-
     if (filmIds.isEmpty) {
       return const Center(
         child: Text('No anime found'),

@@ -12,8 +12,10 @@ class FilmList extends HookConsumerWidget {
   final String name;
   final bool showEpisodeTracker;
   final EdgeInsets padding;
+  final ScrollController controller;
   const FilmList({
     required this.name,
+    required this.controller,
     this.showEpisodeTracker = false,
     this.padding = const EdgeInsets.only(),
     Key? key,
@@ -23,8 +25,6 @@ class FilmList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filmIds = ref.watch(filmIdListProvider(name))?.list;
     final query = ref.watch(queryProvider);
-
-    final controller = useScrollController();
 
     final filmMap = useFuture(useMemoized<Future<Map<String, Film>>>(
       () async {
