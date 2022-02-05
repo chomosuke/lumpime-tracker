@@ -28,6 +28,8 @@ class Query {
   final List<int> seasons;
   final List<String> genres;
   const Query(this.text, this.seasons, this.genres);
+
+  bool get isEmpty => genres.isEmpty && seasons.isEmpty && text.isEmpty;
 }
 
 class QueryResult {

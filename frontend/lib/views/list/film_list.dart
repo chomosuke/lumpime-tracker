@@ -23,8 +23,6 @@ class FilmList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filmIds = ref.watch(filmIdListProvider(name))?.list;
     final query = ref.watch(queryProvider);
-    final noQuery =
-        query.genres.isEmpty && query.seasons.isEmpty && query.text.isEmpty;
 
     final controller = useScrollController();
 
@@ -44,12 +42,12 @@ class FilmList extends HookConsumerWidget {
         filmMap == null ||
         filmIds.any((id) => filmMap[id] == null);
 
-    if (filmIds == null || (nullFilmMap && !noQuery)) {
+    if (filmIds == null || (nullFilmMap && !query.isEmpty)) {
       return const LinearProgressIndicator().width(500).center();
     }
 
     final List<String> filteredFilmIds;
-    if (!noQuery) {
+    if (!query.isEmpty) {
       final filmTuples =
           filmIds.map((id) => Tuple2<String, Film>(id, filmMap![id]!)).toList();
 

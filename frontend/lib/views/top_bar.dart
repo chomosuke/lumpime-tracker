@@ -77,7 +77,7 @@ class Search extends HookConsumerWidget {
       ref.read(queryRangeProvider.state).state = initQueryRange;
     }
 
-    if ('' == ref.watch(queryProvider).text) {
+    if (ref.watch(queryProvider).isEmpty) {
       controller.clear();
     }
 
