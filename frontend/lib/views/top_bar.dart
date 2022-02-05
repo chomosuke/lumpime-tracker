@@ -39,6 +39,7 @@ class TopBar extends HookConsumerWidget {
           ].toRow(mainAxisSize: MainAxisSize.min).ripple(radius: 200).gestures(
             onTap: () {
               Navigator.of(navigatorKey.currentContext!).pushNamed('/');
+              ref.read(queryRangeProvider.state).state = initQueryRange;
               selected.state = '/';
             },
           ),

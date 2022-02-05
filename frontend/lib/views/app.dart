@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/measure_size.dart';
+import 'package:frontend/states/index.dart';
 import 'package:frontend/views/filters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -28,6 +29,9 @@ class App extends HookConsumerWidget {
       key: navigatorKey,
       initialRoute: '/',
       onGenerateRoute: (settings) {
+        if (settings.name != ref.read(routeNameProvider)) {
+          ref.read(queryProvider.state).state = initQuery;
+        }
         if (settings.name == '/' || settings.name == null) {
           return MyPageRoute(
             builder: (context) => SearchPage(

@@ -1,8 +1,9 @@
 import 'package:frontend/http/index.dart' as http;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+const initQuery = Query('', [], []);
 final queryProvider = StateProvider<Query>(
-  (ref) => const Query('', [], []),
+  (ref) => initQuery,
 );
 
 final queryResultProvider = FutureProvider<QueryResult>((ref) async {
