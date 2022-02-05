@@ -159,6 +159,7 @@ func Query(c *gin.Context) {
 		sortStage = append(sortStage, bson.E{Key: "textScore", Value: -1})
 	}
 	sortStage = append(sortStage, bson.E{Key: "seasons", Value: -1})
+	sortStage = append(sortStage, bson.E{Key: "url", Value: -1})
 
 	pipline = append(pipline, bson.D{{Key: "$sort", Value: sortStage}})
 	pipline = append(pipline, bson.D{{Key: "$project", Value: bson.M{"id": 1}}})
