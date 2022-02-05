@@ -59,7 +59,7 @@ class SearchGrid extends HookConsumerWidget {
           mainAxisSpacing: spacing,
         );
       }
-      ;
+
       return Scrollbar(
         controller: controller,
         isAlwaysShown: true,

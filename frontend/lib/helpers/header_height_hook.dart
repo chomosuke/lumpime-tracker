@@ -2,16 +2,21 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:tuple/tuple.dart';
 
 double useHeaderHeight(
   ScrollController mainController,
-  double maxHeight,
-) {
+  double maxHeight, [
+  key,
+]) {
   final previousOffset = useRef(0.0);
   final headerHeight = useState(maxHeight);
-  useValueChanged<double, void>(maxHeight, (_, __) {
-    headerHeight.value = maxHeight;
-  });
+  useValueChanged<Tuple2<double, dynamic>, void>(
+    Tuple2(maxHeight, key),
+    (_, __) {
+      headerHeight.value = maxHeight;
+    },
+  );
   useEffect(() {
     void listener() {
       headerHeight.value = min(
