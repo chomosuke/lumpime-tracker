@@ -1,35 +1,44 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Card;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:frontend/helpers/paging_controller_hook.dart';
 import 'package:frontend/states/index.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:styled_widget/styled_widget.dart';
 
+const pageSize = 100;
+
 class SearchGrid extends HookConsumerWidget {
-  final EdgeInsetsGeometry? padding;
+  final double topPadding;
   final ScrollController controller;
   const SearchGrid({
     required this.controller,
-    this.padding,
+    this.topPadding = 0,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filmIdsAsync = ref.watch(queryResultProvider(0));
+    final query = ref.watch(queryProvider);
 
-    if (filmIdsAsync.value == null) {
-      return const LinearProgressIndicator().width(500).center();
-    }
+    final pagingController = usePagingController<int, String>(
+      pageRequestListener: (pageKey, pagingController) async {
+        final newItems =
+            await QueryResult.get(query, pageKey * pageSize, pageSize);
+        final isLastPage = newItems.filmIds.length < pageSize;
+        if (isLastPage) {
+          pagingController.appendLastPage(newItems.filmIds);
+        } else {
+          final nextPageKey = pageKey + 1;
+          pagingController.appendPage(newItems.filmIds, nextPageKey);
+        }
+      },
+      firstPageKey: 0,
+      effectKeys: [query],
+    );
 
-    final filmIds = filmIdsAsync.value!.filmIds;
-
-    if (filmIds.isEmpty) {
-      return const Center(
-        child: Text('No anime found'),
-      );
-    }
     return LayoutBuilder(builder: (context, constraints) {
       const maxCrossAxisExtent = 200.0;
 
@@ -63,30 +72,33 @@ class SearchGrid extends HookConsumerWidget {
       return Scrollbar(
         controller: controller,
         isAlwaysShown: true,
-        child: CustomScrollView(
-          controller: controller,
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.only(
-                top: spacing,
-                left: spacing,
-                right: spacing,
-              )
-                  .add(padding ?? const EdgeInsets.all(0))
-                  .add(EdgeInsets.symmetric(
-                    horizontal: max((constraints.maxWidth - 1600) / 2, 0),
-                  )),
-              sliver: SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Card(
-                    filmId: filmIds[index],
-                  ),
-                  childCount: filmIds.length,
-                ),
-                gridDelegate: delegate,
-              ),
+        child: PagedGridView<int, String>(
+          scrollController: controller,
+          pagingController: pagingController,
+          padding: EdgeInsets.only(
+            top: spacing + topPadding,
+            left: spacing,
+            right: spacing,
+            bottom: spacing,
+          ).add(EdgeInsets.symmetric(
+            horizontal: max((constraints.maxWidth - 1600) / 2, 0),
+          )),
+          builderDelegate: PagedChildBuilderDelegate(
+            itemBuilder: (context, filmId, index) => Card(
+              filmId: filmId,
             ),
-          ],
+            firstPageProgressIndicatorBuilder: (context) =>
+                const LinearProgressIndicator().width(500).center(),
+            newPageProgressIndicatorBuilder: (context) =>
+                const LinearProgressIndicator().width(500).center(),
+            noItemsFoundIndicatorBuilder: (context) =>
+                const Text('No anime found').center(),
+            // noMoreItemsIndicatorBuilder: (context) =>
+            //     const Text('End of search result').center(),
+          ),
+          gridDelegate: delegate,
+          showNoMoreItemsIndicatorAsGridChild: false,
+          showNewPageProgressIndicatorAsGridChild: false,
         ),
       );
     });

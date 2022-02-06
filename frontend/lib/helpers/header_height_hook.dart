@@ -33,6 +33,6 @@ double useHeaderHeight(
     return () {
       mainController.removeListener(listener);
     };
-  });
+  }, [maxHeight]);
   return headerHeight.value;
 }

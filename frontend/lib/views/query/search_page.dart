@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:frontend/helpers/header_height_hook.dart';
 import 'package:frontend/helpers/measure_size.dart';
+import 'package:frontend/http/index.dart';
 import 'package:frontend/states/index.dart';
 import 'search_grid.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,12 +17,14 @@ class SearchPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final headerInnerHeight = useState(0.0);
 
+    final query = ref.watch(queryProvider);
+
     final controller = useScrollController();
 
     final headerHeight = useHeaderHeight(
       controller,
       headerInnerHeight.value,
-      ref.watch(queryProvider),
+      query,
     );
 
     return LayoutBuilder(
@@ -30,7 +33,7 @@ class SearchPage extends HookConsumerWidget {
         children: [
           SearchGrid(
             controller: controller,
-            padding: EdgeInsets.only(bottom: 56, top: headerInnerHeight.value),
+            topPadding: headerInnerHeight.value,
           ),
           if (header != null)
             MeasureSize(
