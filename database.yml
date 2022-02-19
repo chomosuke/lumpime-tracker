@@ -1,0 +1,74 @@
+# a hypothetical sql database for lumpime tracker
+
+users:
+  description: store all users
+  relationships: 
+    - 1:n film_lists
+  columns:
+    id: (int) Internal unique identifier of a user. This allow user to change the username without effecting any other parts of the system.
+    username: (str) Unique identifier of user. Can be anything but have to be unique across database.
+    password: (str) hashed password of user though the backend does not hash this. It's hashed at the frontend. Might be hashed in the future
+film_lists:
+  description: stores which list belongs to which users, along with some additional information about the list.
+  relationships:
+    - 1:n film_list_items
+    - n:1 users
+  colmuns:
+    id: (int) this allows film_list_items to reference a row in film_list
+    user_id: the user who owns this list
+    name: the name of the list, have to be unique for each user
+film_list_items:
+  description: stores what films are in each film_list
+  relationships:
+    - n:1 film_lists
+    - n:1 films
+  columns:
+    film_list_id: id for the film list the film belongs to
+    film_id: id for the film that belong to the film_list that film_list_id points to
+films:
+  description: film data crawled from myanimelist.net (only animelist.net for now)
+  relationships:
+    - 1:n film_list_items
+    - 1:n alt_names
+    - 1:n seasons
+  columns:
+    id: unique identifier of that film
+    url: also unique, the url where the data of this film came from.
+    name: the name of this film
+    english: the english name of this film
+    keywords: the keywords the search engine looks at when searching for a film
+    img_url: the cover image for this film
+    episodes: the number of episodes this film have
+    status: could be (airing, upcoming etc)
+alt_names:
+  description: alt_names for each film
+  relatioships:
+    - n:1 films
+  columns:
+    id: id
+    content: the alt name
+    film_id: id of the film this alt name belongs to
+seasons:
+  description: list of season a film have
+  relationships:
+    - n:1 films
+  columns:
+    id: id
+    content: !!int the season number
+    film_id: id of the film that appeared in this season
+genres:
+  description: the genres for this film
+  relationships:
+    - n:1 films
+  colmuns:
+    id: id
+    content: !!str name of the genre
+    film_id: id of the film with this genre
+user_film_datas:
+  description: user specific data for each film
+  relationships:
+    - n:1 films
+    - n:1 users
+  columns:
+    id: id
+    current_watching_ep: !!int which ep is user currently up to. 0 means they haven't started watching it yet.
