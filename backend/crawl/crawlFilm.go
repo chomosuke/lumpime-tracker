@@ -98,6 +98,10 @@ func crawlFilm(res *http.Response) {
 		panic(err)
 	}
 
+	if film.Seasons == nil {
+		film.Seasons = []int{}
+	}
+
 	_, err = db.DBInst.Films.ReplaceOne(
 		context.TODO(),
 		bson.M{"url": res.Request.URL.String()},
