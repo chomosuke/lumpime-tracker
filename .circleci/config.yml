@@ -25,16 +25,16 @@ workflows:
             branches:
               only: [master]
           context: [chomosuke-com-aws-deploy]
-      # - aws-ecs/deploy-service-update:
-      #     context: [chomosuke-com-aws-deploy]
-      #     requires: [build-and-push-image]
-      #
-      #     family: lumpime-tracker
-      #     cluster: chomosuke-com
-      #     container-image-name-updates:
-      #       'container=lumpime-tracker,tag=${CIRCLE_SHA1}'
-      #     enable-circuit-breaker: true
-      #     verify-revision-is-deployed: true
-      #     poll-interval: 8
+      - aws-ecs/deploy-service-update:
+          context: [chomosuke-com-aws-deploy]
+          requires: [build-and-push-image]
+
+          family: lumpime-tracker
+          cluster: chomosuke-com
+          container-image-name-updates:
+            'container=lumpime-tracker,tag=${CIRCLE_SHA1}'
+          enable-circuit-breaker: true
+          verify-revision-is-deployed: true
+          poll-interval: 8
 
 # vim: ts=2:sw=2:
