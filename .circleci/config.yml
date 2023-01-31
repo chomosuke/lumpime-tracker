@@ -1,0 +1,40 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@8
+  aws-ecs: circleci/aws-ecs@3
+jobs:
+  build-and-push-image:
+    machine:
+      image: ubuntu-2004:2022.04.1
+      docker_layer_caching: true
+    resource_class: arm.large
+    steps:
+      - aws-ecr/build-and-push-image:
+          platform: linux/arm64
+          public-registry: true
+          public-registry-alias: m4l5t7p6
+          region: us-east-1
+          tag: "${CIRCLE_SHA1}"
+          repo: chomosuke-com
+
+workflows:
+  build-deploy:
+    jobs:
+      - build-and-push-image:
+          filters:
+            branches:
+              only: [master]
+          context: [chomosuke-com-aws-deploy]
+      # - aws-ecs/deploy-service-update:
+      #     context: [chomosuke-com-aws-deploy]
+      #     requires: [build-and-push-image]
+      #
+      #     family: lumpime-tracker
+      #     cluster: chomosuke-com
+      #     container-image-name-updates:
+      #       'container=lumpime-tracker,tag=${CIRCLE_SHA1}'
+      #     enable-circuit-breaker: true
+      #     verify-revision-is-deployed: true
+      #     poll-interval: 8
+
+# vim: ts=2:sw=2:
