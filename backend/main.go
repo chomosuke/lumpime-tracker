@@ -23,14 +23,13 @@ func main() {
 	address := flag.String("a", "127.0.0.1", "address for the server")
 	port := flag.Int("p", 80, "port for the server")
 	dbConnection := flag.String("c", "mongodb://localhost:27017/", "connection string for mongodb database")
-	*dbConnection += "film-list"
 	auth.Secret = flag.String("s", "an insecure secret", "secret for authentication")
 	release := flag.Bool("r", false, "set to release mode")
 
 	flag.Parse()
 
 	// connect to database
-	database, cleanup := db.InitDb(*dbConnection)
+	database, cleanup := db.InitDb(*dbConnection + "film-list")
 	db.DBInst = database
 	defer cleanup()
 
