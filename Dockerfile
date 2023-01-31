@@ -5,7 +5,7 @@ RUN go get
 RUN go build
 
 FROM debian:bullseye as frontend_builder
-RUN apt update && apt install -y curl git unzip xz-utils zip
+RUN apt-get update && apt-get install -y curl git unzip xz-utils zip
 USER root
 WORKDIR /home/root
 
