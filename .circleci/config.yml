@@ -2,12 +2,15 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@8
   aws-ecs: circleci/aws-ecs@3
+  aws-cli: circleci/aws-cli@3
 jobs:
   build-and-push-image:
     machine:
       image: ubuntu-2004:2022.04.1
       docker_layer_caching: true
     resource_class: arm.large
+    environment:
+      AWS_ECR_REGISTRY_ID: 441989054812
     steps:
       - aws-ecr/build-and-push-image:
           platform: linux/arm64
@@ -15,7 +18,24 @@ jobs:
           public-registry-alias: m4l5t7p6
           region: us-east-1
           tag: "${CIRCLE_SHA1}"
-          repo: chomosuke-com
+          repo: lumpime-tracker
+
+  deploy-service-update:
+    docker:
+      - image: cimg/python:3.10.4
+    resource_class: small
+    environment:
+      AWS_DEFAULT_REGION: ap-southeast-2
+    steps:
+      - aws-cli/setup
+      - aws-ecs/update-service:
+          family: lumpime-tracker
+          cluster: chomosuke-com
+          container-image-name-updates:
+            'container=lumpime-tracker,tag=${CIRCLE_SHA1}'
+          enable-circuit-breaker: true
+          verify-revision-is-deployed: true
+          poll-interval: 8
 
 workflows:
   build-deploy:
@@ -24,17 +44,7 @@ workflows:
           filters:
             branches:
               only: [master]
-          context: [chomosuke-com-aws-deploy]
-      - aws-ecs/deploy-service-update:
-          context: [chomosuke-com-aws-deploy]
+      - deploy-service-update:
           requires: [build-and-push-image]
-
-          family: lumpime-tracker
-          cluster: chomosuke-com
-          container-image-name-updates:
-            'container=lumpime-tracker,tag=${CIRCLE_SHA1}'
-          enable-circuit-breaker: true
-          verify-revision-is-deployed: true
-          poll-interval: 8
 
 # vim: ts=2:sw=2:
