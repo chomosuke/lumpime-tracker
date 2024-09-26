@@ -17,6 +17,7 @@ import (
 func crawlFilm(res *http.Response) {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 4})
 		panic(err)
 	}
 	var name string
@@ -95,6 +96,7 @@ func crawlFilm(res *http.Response) {
 		bson.M{"url": res.Request.URL.String()},
 	).Decode(&film)
 	if err != mongo.ErrNoDocuments && err != nil {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 5})
 		panic(err)
 	}
 
@@ -120,6 +122,7 @@ func crawlFilm(res *http.Response) {
 		options.Replace().SetUpsert(true),
 	)
 	if err != nil {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 6})
 		panic(err)
 	}
 }

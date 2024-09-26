@@ -26,6 +26,7 @@ func crawlCycle() {
 		variable.LastCrawledId = 0
 		db.DBInst.Variables.InsertOne(context.TODO(), variable)
 	} else if err != nil {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 1})
 		panic(err)
 	}
 
@@ -76,6 +77,7 @@ func getPage(url string, statusNotExist int) *http.Response {
 		}
 		res, err := client.Get(url)
 		if err != nil {
+			db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 2})
 			panic(err)
 		}
 		if res.StatusCode == http.StatusOK || res.StatusCode == statusNotExist {
@@ -101,6 +103,7 @@ func pageExist(url string, statusNotExist int) (*http.Response, bool) {
 	} else if res.StatusCode == http.StatusOK {
 		return res, true
 	} else {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": res.StatusCode, "number": 3})
 		panic(res.StatusCode)
 	}
 }

@@ -29,6 +29,7 @@ func intToSeason(i int) (int, string) {
 func crawlSeason(res *http.Response, season int) {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
+		db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 7})
 		panic(err)
 	}
 
@@ -48,6 +49,7 @@ func crawlSeason(res *http.Response, season int) {
 			},
 		)
 		if err != nil {
+			db.DBInst.Error.InsertOne(context.TODO(), bson.M{"error": err, "number": 8})
 			panic(err)
 		}
 	})

@@ -19,6 +19,7 @@ type Database struct {
 	UserFilms *mongo.Collection
 	Films     *mongo.Collection
 	Variables *mongo.Collection
+	Error     *mongo.Collection
 }
 
 func InitDb(connectionString string) (Database, func()) {
@@ -44,6 +45,7 @@ func InitDb(connectionString string) (Database, func()) {
 	db.UserFilms = db.DB.Collection("userFilms")
 	db.Films = db.DB.Collection("films")
 	db.Variables = db.DB.Collection("variables")
+	db.Error = db.DB.Collection("error")
 
 	// create indexes
 	db.Users.Indexes().CreateOne(context.Background(), mongo.IndexModel{
